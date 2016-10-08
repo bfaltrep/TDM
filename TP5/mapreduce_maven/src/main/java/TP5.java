@@ -1,12 +1,16 @@
 import java.awt.geom.Point2D;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.math.BigDecimal;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -26,7 +30,35 @@ public class TP5 {
 		}
 	}
 
-	public static class TP5Reducer extends Reducer<LongWritable, Point2DWritable, NullWritable, Text> {
+	public static class TP5Combiner extends Reducer<LongWritable, Point2DWritable, LongWritable, LongWritable>{
+		
+		private long _nb_circle;
+		private long _nb_total;
+		
+		protected void setup(Context context)
+		{
+			
+			_nb_circle = 0;
+			_nb_total = 0;
+		}
+		
+		public void reduce(LongWritable key, Iterable<Point2DWritable> values, Context context) throws IOException, InterruptedException {
+			for(Point2DWritable point : values)
+			{
+				_nb_total++;
+				if(pi_quart(point.getPoint()))
+					_nb_circle++;
+			}
+			
+		}
+		
+		protected void cleanup(Context context) throws IOException, InterruptedException{
+
+			context.write(new LongWritable(_nb_total),new LongWritable(_nb_circle));
+		}
+	}
+	
+	public static class TP5Reducer extends Reducer<LongWritable, LongWritable, NullWritable, Text> {
 		
 		private Text _val = new Text();
 		private NullWritable _key;
@@ -36,25 +68,19 @@ public class TP5 {
 
 		protected void setup(Context context)
 		{
+			
 			_nb_circle = 0;
-			_nb_total = context.getConfiguration().getLong("nb_mapper",-1)*100000;//context.getConfiguration().getLong("point_by_split",-1);
+			_nb_total = 0;
 		}
 		
-		public void reduce(LongWritable key, Iterable<Point2DWritable> values, Context context) throws IOException, InterruptedException {
+		public void reduce(LongWritable key, Iterable<LongWritable> values, Context context) throws IOException, InterruptedException {
 			
-			StringBuffer res = new StringBuffer();
-			for(Point2DWritable point : values)
+			for(LongWritable input_circle : values)
 			{
-				Point2D.Double pt = point.getPoint();
-				res.append(pt.getX()+" "+pt.getY()+"\n");
-				
-				if(pi_quart(pt))
-					_nb_circle++;
+				_nb_circle+=input_circle.get();
 			}
-			res.deleteCharAt(res.length()-1);
+			_nb_total+=key.get();
 			
-			_val.set(res.toString());
-			context.write(_key,_val);
 		}
 		
 		protected void cleanup(Context context) throws IOException, InterruptedException{
@@ -79,6 +105,8 @@ public class TP5 {
 		job.setMapperClass(TP5Mapper.class);
 		job.setMapOutputKeyClass(LongWritable.class);
 		job.setMapOutputValueClass(Point2DWritable.class);
+		
+		job.setCombinerClass(TP5Combiner.class);
 		job.setReducerClass(TP5Reducer.class);
 		job.setOutputKeyClass(NullWritable.class);
 		job.setOutputValueClass(Text.class);
