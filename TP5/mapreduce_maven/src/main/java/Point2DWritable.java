@@ -3,13 +3,20 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import org.apache.hadoop.io.Writable;
 
-public class Point2DWritable {
+
+public class Point2DWritable implements Writable{
 	public Point2D.Double _point;
 	
-	public Point2DWritable(){}
+	public Point2DWritable(){
+		_point = new Point2D.Double();
+		_point.x = 0;
+		_point.y = 0;
+	}
 	
 	public Point2DWritable(double x, double y){
+		_point = new Point2D.Double();
 		_point.x = x;
 		_point.y = y;
 	}

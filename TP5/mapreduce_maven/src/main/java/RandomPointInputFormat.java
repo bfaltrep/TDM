@@ -13,16 +13,21 @@ public class RandomPointInputFormat extends InputFormat<Object, Object>{
 
 	@Override
 	public RecordReader createRecordReader(InputSplit arg0,	TaskAttemptContext arg1) throws IOException, InterruptedException {
-		
-		RandomPointReader rpr = new RandomPointReader();
+		RandomPointReader rpr = new RandomPointReader(arg0.getLength());
 		return rpr;
 	}
 
 	@Override
 	public List<InputSplit> getSplits(JobContext arg0) throws IOException, InterruptedException {
 		
-		int nb_splits = Integer.parseInt(arg0.getConfiguration().get("nb_mapper"));
-		long size_split = Integer.parseInt(arg0.getConfiguration().get("point_by_split"));
+		int nb_splits = arg0.getConfiguration().getInt("nb_mapper", -1);
+		long size_split = arg0.getConfiguration().getLong("point_by_split",-1);
+		
+		if(nb_splits == -1)
+			nb_splits = 2;
+		if(size_split == -1) // problème : à l'heure actuelle, n'est pas considéré ensuite.
+			size_split = 5000;
+		
 		
 		List<InputSplit> list = new ArrayList<InputSplit>(nb_splits);
 		for(int i = 0 ; i < nb_splits ; i++)

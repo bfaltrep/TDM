@@ -5,19 +5,17 @@ import java.io.IOException;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.InputSplit;
 
-
 public class FakeInputSplit extends InputSplit implements Writable{
 
 	private long _length;
 	
 	public FakeInputSplit(){
-		_length = 200;
+		_length = 100000;
 	}
 	
 	public FakeInputSplit(long length) {
 		_length = length;
 	}
-	
 	
 	@Override
 	public long getLength() throws IOException, InterruptedException {
@@ -26,7 +24,6 @@ public class FakeInputSplit extends InputSplit implements Writable{
 
 	@Override
 	public String[] getLocations() throws IOException, InterruptedException {
-		
 		return new String[]{};
 	}
 

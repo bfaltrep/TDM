@@ -16,6 +16,11 @@ public class RandomPointReader extends RecordReader<LongWritable, Point2DWritabl
 		_key = (long)0;
 	}
 	
+	public RandomPointReader(long length){
+		_length = length;
+		_key = (long)0;
+	}
+	
 	@Override
 	public void close() throws IOException {
 		// TODO Auto-generated method stub
@@ -43,12 +48,11 @@ public class RandomPointReader extends RecordReader<LongWritable, Point2DWritabl
 
 	@Override
 	public boolean nextKeyValue() throws IOException, InterruptedException {
-		boolean res = !(_key==_length);
+		boolean res = _key != _length;
 		if(res)
 		{
 			_key+=(long)1.0;
 			_point = new Point2DWritable(Math.random(),Math.random());
-			
 		}
 		return res;
 	}
