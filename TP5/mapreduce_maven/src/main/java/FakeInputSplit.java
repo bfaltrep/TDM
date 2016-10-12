@@ -27,8 +27,12 @@ public class FakeInputSplit extends InputSplit implements Writable{
 		return new String[]{};
 	}
 
-	public void write(DataOutput out) throws IOException {}
+	public void write(DataOutput out) throws IOException {
+		out.writeLong(_length);
+	}
 
-	public void readFields(DataInput in) throws IOException {}
+	public void readFields(DataInput in) throws IOException {
+		_length = in.readLong();
+	}
 
 }

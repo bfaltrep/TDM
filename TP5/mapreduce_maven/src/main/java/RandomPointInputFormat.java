@@ -11,29 +11,32 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
 public class RandomPointInputFormat extends InputFormat<Object, Object>{
 
+	private static int randomSplits = 1;
+	private static int nbPointsPerSplit = 1;
+	
 	@Override
-	public RecordReader createRecordReader(InputSplit arg0,	TaskAttemptContext arg1) throws IOException, InterruptedException {
+	public RecordReader createRecordReader(InputSplit arg0,	TaskAttemptContext arg1)
+				throws IOException, InterruptedException {
 		RandomPointReader rpr = new RandomPointReader(arg0.getLength());
 		return rpr;
 	}
 
 	@Override
 	public List<InputSplit> getSplits(JobContext arg0) throws IOException, InterruptedException {
-		
-		int nb_splits = arg0.getConfiguration().getInt("nb_mapper", -1);
-		long size_split = arg0.getConfiguration().getLong("point_by_split",-1);
-		
-		if(nb_splits == -1)
-			nb_splits = 2;
-		if(size_split == -1) // problème : à l'heure actuelle, n'est pas considéré ensuite.
-			size_split = 5000;
-		
-		
-		List<InputSplit> list = new ArrayList<InputSplit>(nb_splits);
-		for(int i = 0 ; i < nb_splits ; i++)
-			list.add(new FakeInputSplit(size_split));
+
+		List<InputSplit> list = new ArrayList<InputSplit>(randomSplits);
+		for(int i = 0 ; i < randomSplits ; i++)
+			list.add(new FakeInputSplit(nbPointsPerSplit));
 		
 		return list;
 	}
 
+	public static void setRandomSplits(int nb) {
+		if (nb > 0) randomSplits = nb;
+	}
+
+	public static void setPointPerSpits(int nb) {
+		if (nb > 0) nbPointsPerSplit = nb;
+	}
+	
 }

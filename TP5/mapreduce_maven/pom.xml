@@ -25,7 +25,7 @@
   			<configuration>
   				<archive>
   					<manifest>
-  						<mainClass>TP5</mainClass>
+  						<mainClass>TP5_efficient</mainClass>
   					</manifest>
   				</archive>
   			</configuration>
