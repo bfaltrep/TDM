@@ -1,10 +1,14 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -20,8 +24,8 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 public class TP6 extends Configured implements Tool {
+	
 	public static class MyComparable implements Comparable{
-
 		private long _pop;
 		private String _town;
 
@@ -29,7 +33,6 @@ public class TP6 extends Configured implements Tool {
 			_pop = pop;
 			_town = town;
 		}
-
 
 		public int compareTo(Object o) {
 
@@ -55,14 +58,14 @@ public class TP6 extends Configured implements Tool {
 	}
 
 
-	public static class TP6Mapper extends Mapper<LongWritable, Text, LongWritable, Text>{
-		private int size_top;
+	public static class TP6Mapper extends Mapper<Object, Text, LongWritable, Text>{
+		public int size_top;
 		private TreeMap<MyComparable,String> top;
 		private Text value;
 		private LongWritable key;
 
 		public void setup(Context context){
-			size_top = context.getConfiguration().getInt("size_top", 1);
+			size_top = context.getConfiguration().getInt("stop", 10);
 			top = new TreeMap<MyComparable,String>();
 			value = new Text();
 			key = new LongWritable();
@@ -72,10 +75,10 @@ public class TP6 extends Configured implements Tool {
 			String tokens[] = value.toString().split(",");
 			try
 			{
-
+				if (tokens.length < 7 || tokens[4].length()==0 ) return;
 				if(!tokens[4].matches("") && !tokens[1].matches(""))
 				{
-					long pop = Integer.parseInt(tokens[4]);
+					long pop = Long.parseLong(tokens[4]);
 					if(pop < 1) return;
 
 					top.put(new MyComparable(pop, new String(tokens[1])), new String(tokens[1]));
@@ -101,15 +104,19 @@ public class TP6 extends Configured implements Tool {
 			}
 		}
 	}
+	
+	public static class TP6Combiner extends Reducer<LongWritable, Text,LongWritable, Text>{
+		
+	}
 
 	public static class TP6Reducer extends Reducer<LongWritable,Text,IntWritable,Text> {
-		private int size_top;
+		public int size_top;
 		private TreeMap<MyComparable,String> top;
 		private Text _value;
 		private IntWritable _key;
 
 		public void setup(Context context){
-			size_top = context.getConfiguration().getInt("size_top", 1);
+			size_top = context.getConfiguration().getInt("stop", 10);
 			top = new TreeMap<MyComparable,String>();
 			_value = new Text();
 			_key = new IntWritable();
@@ -141,24 +148,27 @@ public class TP6 extends Configured implements Tool {
 	}
 
 	public void usage() {
-		System.out.println("Invalid arguments, waiting for 1 parameters as int which is the size of our top.");
+		System.out.println("Invalid arguments, waiting for 3 parameters : file_input directory_output <int>size_top.");
 	}
 
 	public int run(String args[]) throws IOException, ClassNotFoundException, InterruptedException {
-		int size_top =1;
+		/*
+		int size_top;
 		try {
 			size_top = Integer.parseInt(args[2]);
 		}
 		catch(Exception e) {
 			usage();
 			return -1;
-		}
+		}*/
 
 		Configuration conf = new Configuration();
+				
 		Job job = Job.getInstance(conf, "TP6");
 		job.setNumReduceTasks(1);
+		conf.setInt("stop", Integer.parseInt(args[2]));
 		job.setJarByClass(TP6.class);
-		conf.setInt("size_top", size_top);
+		
 
 		job.setMapperClass(TP6Mapper.class);
 		job.setMapOutputKeyClass(LongWritable.class);
@@ -174,15 +184,36 @@ public class TP6 extends Configured implements Tool {
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-		return 0;
+		return job.waitForCompletion(true)?0:1;
 	}
 
 	public static void main(String[] args) throws Exception {
 		int res = ToolRunner.run(new TP6(), args);
 		
-		/*recupérer contenu du fichier de sortie et le printer*/
-		
-		
+		try{
+			URI uri = new URI(args[1]+"/part-r-00000");
+			uri=uri.normalize();
+			FileSystem file = FileSystem.get(uri, new Configuration(), "kbaptist");
+			Path path = new Path(uri.getPath());
+			BufferedReader buffer = new BufferedReader(new InputStreamReader(file.open(path)));
+			
+			String line;
+			line = buffer.readLine();
+			while (line!=null) {
+				System.out.println(line);
+                line = buffer.readLine();   
+			}
+			
+			URI uri_rep = new URI(args[1]);
+			uri_rep = uri_rep.normalize();
+			FileSystem _rep = FileSystem.get(uri_rep, new Configuration(), "kbaptist");
+			Path path_rep = new Path(uri_rep.getPath());
+			
+			_rep.delete(path_rep, true);
+			
+		}
+		catch(Exception e){e.printStackTrace();}	
+				
 		System.exit(res);
 		
 		
