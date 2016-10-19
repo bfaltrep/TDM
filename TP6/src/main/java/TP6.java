@@ -183,53 +183,63 @@ public class TP6 extends Configured implements Tool {
 	}
 
 	public void usage() {
-		System.out.println("Invalid arguments, waiting for 3 parameters : file_input directory_output <int>size_top.");
+		System.out.println("Invalid arguments, waiting for 3 parameters : file_input directory_output <int>size_top <string>Hadoop_rights_name.");
 	}
 
 	public int run(String args[]) throws IOException, ClassNotFoundException, InterruptedException {
-		/*
-		int size_top;
+		if(args.length != 4)
+		{
+			usage();
+			System.exit(1);
+		}	
+		Configuration conf = new Configuration();
 		try {
-			size_top = Integer.parseInt(args[2]);
+			conf.setInt("stop",Integer.parseInt(args[2]));
 		}
 		catch(Exception e) {
 			usage();
 			return -1;
-		}*/
-
-		Configuration conf = new Configuration();
-
+		}
+		
 		Job job = Job.getInstance(conf, "TP6");
-		job.setNumReduceTasks(1);
-		conf.setInt("stop", Integer.parseInt(args[2]));
+		
 		job.setJarByClass(TP6.class);
-
-
+		
 		job.setMapperClass(TP6Mapper.class);
 		job.setMapOutputKeyClass(LongWritable.class);
 		job.setMapOutputValueClass(Text.class);
+		
 		job.setCombinerClass(TP6Combiner.class);
 
+		job.setNumReduceTasks(1);
 		job.setReducerClass(TP6Reducer.class);
 		job.setOutputKeyClass(IntWritable.class);
 		job.setOutputValueClass(Text.class);
-
+		
 		job.setOutputFormatClass(TextOutputFormat.class);
 		job.setInputFormatClass(TextInputFormat.class);
 
-		FileInputFormat.addInputPath(job, new Path(args[0]));
-		FileOutputFormat.setOutputPath(job, new Path(args[1]));
-
+		try {
+			FileInputFormat.addInputPath(job, new Path(args[0]));
+			FileOutputFormat.setOutputPath(job, new Path(args[1]));
+			
+		}
+		catch(Exception e) {
+			usage();
+			return -1;
+		}
+		
 		return job.waitForCompletion(true)?0:1;
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String args[]) throws Exception {
 		int res = ToolRunner.run(new TP6(), args);
 
+			//transmission du fichier vers le terminal
 		try{
 			URI uri = new URI(args[1]+"/part-r-00000");
 			uri=uri.normalize();
-			FileSystem file = FileSystem.get(uri, new Configuration(), "bfaltrep");
+			FileSystem file = FileSystem.get(uri, new Configuration(), args[3]);
 			Path path = new Path(uri.getPath());
 			BufferedReader buffer = new BufferedReader(new InputStreamReader(file.open(path)));
 
@@ -240,9 +250,10 @@ public class TP6 extends Configured implements Tool {
 				line = buffer.readLine();   
 			}
 
+				//suppression du fichier
 			URI uri_rep = new URI(args[1]);
 			uri_rep = uri_rep.normalize();
-			FileSystem _rep = FileSystem.get(uri_rep, new Configuration(), "bfaltrep");
+			FileSystem _rep = FileSystem.get(uri_rep, new Configuration(), args[3]);
 			Path path_rep = new Path(uri_rep.getPath());
 
 			_rep.delete(path_rep, true);
@@ -251,7 +262,5 @@ public class TP6 extends Configured implements Tool {
 		catch(Exception e){e.printStackTrace();}	
 
 		System.exit(res);
-
-
 	}
 }
