@@ -20,9 +20,6 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-
-//notre cluster : yarn jar tp7-mapreduce-0.0.1.jar ScalableJoin /cities.txt /region.csv /tp7
-
 public class ScalableJoin  extends Configured implements Tool {
 
 	public static class TaggedKey implements WritableComparable{
@@ -144,10 +141,12 @@ public class ScalableJoin  extends Configured implements Tool {
 
 	    	Iterator<Text> it = values.iterator();
 	    	String line = it.next().toString();
-	    	if(!key._side){
+	    	// Si nous avons bien une région associé à cet ensemble de villes.
+	    	// puis si nous avons bien des villes associé à cette région.
+	    	if(!key._side && it.hasNext()){
 	    		String region = new String(line);
-	    		while(it.hasNext())
-	    			context.write(new Text(region),new Text(it.next().toString()));
+	    			while(it.hasNext())
+	    				context.write(new Text(region),new Text(it.next().toString()));
 	    	}
 	    	
 	    }

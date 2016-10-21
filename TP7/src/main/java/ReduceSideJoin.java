@@ -17,11 +17,6 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-
-//yarn jar tp7-mapreduce-0.0.1.jar ReduceSideJoin /user/bfaltrep/cities.txt /user/bfaltrep/region.txt  /user/bfaltrep/tp7
-
-//notre cluster : yarn jar tp7-mapreduce-0.0.1.jar ReduceSideJoin /cities.txt /region.csv /tp7
-
 public class ReduceSideJoin extends Configured implements Tool {
 	
 	public static class TaggedValue implements Writable{
