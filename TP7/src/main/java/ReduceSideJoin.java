@@ -97,7 +97,7 @@ public class ReduceSideJoin extends Configured implements Tool {
 	    
 	    job.setReducerClass(RSJReducer.class);
 	    job.setOutputKeyClass(Text.class);
-	    job.setOutputValueClass(Text.class);
+	    job.setOutputValueClass(TaggedValue.class);
 	    
 	    job.setOutputFormatClass(TextOutputFormat.class);
 	    job.setInputFormatClass(TextInputFormat.class);
