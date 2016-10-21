@@ -1,0 +1,100 @@
+1	tokyo 31480498
+2	shanghai 14608512
+3	bombay 12692717
+4	karachi 11627378
+5	new delhi 10928270
+6	delhi 10928270
+7	manila 10443877
+8	moscow 10381288
+9	seoul 10323448
+10	sao paulo 10021437
+11	istanbul 9797536
+12	lagos 8789133
+13	mexico 8720916
+14	jakarta 8540306
+15	new york 8107916
+16	kinshasa 7787832
+17	cairo 7734602
+18	lima 7646786
+19	peking 7480601
+20	london 7421228
+21	bogota 7102602
+22	dhaka 6493177
+23	lahore 6312576
+24	rio de janeiro 6023742
+25	baghdad 5672516
+26	bangkok 5104475
+27	bangalore 4931603
+28	santiago 4837248
+29	calcutta 4631819
+30	toronto 4612187
+31	rangoon 4477782
+32	sydney 4394585
+33	madras 4328416
+34	wuhan 4184206
+35	saint petersburg 4039751
+36	chongqing 3967028
+37	xian 3953191
+38	chengdu 3950437
+39	los angeles 3877129
+40	alexandria 3811512
+41	tianjin 3766207
+42	melbourne 3730212
+43	ahmadabad 3719933
+44	abidjan 3692570
+45	kano 3626204
+46	casablanca 3609698
+47	hyderabad 3598199
+48	ibadan 3565810
+49	singapore 3547809
+50	ankara 3519177
+51	shenyang 3512192
+52	riyadh 3469290
+53	ho chi minh city 3467426
+54	cape town 3433504
+55	berlin 3398362
+56	montreal 3268513
+57	harbin 3229883
+58	guangzhou 3152825
+59	durban 3120340
+60	madrid 3102644
+61	nanjing 3087010
+62	kabul 3043589
+63	pune 2935968
+64	surat 2894675
+65	chicago 2841952
+66	kanpur 2823523
+67	umm durman 2810328
+68	luanda 2776125
+69	addis abeba 2757807
+70	nairobi 2750561
+71	taiyuan 2722475
+72	jaipur 2711937
+73	salvador 2711903
+74	dakar 2702820
+75	dar es salaam 2698651
+76	rome 2643736
+77	mogadishu 2590180
+78	jiddah 2545728
+79	changchun 2537421
+80	taipei 2514794
+81	kiev 2514227
+82	faisalabad 2507302
+83	izmir 2501895
+84	lakhnau 2472250
+85	gizeh 2443490
+86	fortaleza 2416920
+87	cali 2392897
+88	surabaya 2374920
+89	belo horizonte 2373255
+90	mashhad 2307254
+91	nagpur 2228191
+92	harare 2213701
+93	brasilia 2207812
+94	santo domingo 2202016
+95	nagoya 2191291
+96	aleppo 2139878
+97	paris 2110694
+98	jinan 2069266
+99	tangshan 2054526
+100	dalian 2035307

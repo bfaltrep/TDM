@@ -1,0 +1,1000 @@
+1	tokyo 31480498
+2	shanghai 14608512
+3	bombay 12692717
+4	karachi 11627378
+5	new delhi 10928270
+6	delhi 10928270
+7	manila 10443877
+8	moscow 10381288
+9	seoul 10323448
+10	sao paulo 10021437
+11	istanbul 9797536
+12	lagos 8789133
+13	mexico 8720916
+14	jakarta 8540306
+15	new york 8107916
+16	kinshasa 7787832
+17	cairo 7734602
+18	lima 7646786
+19	peking 7480601
+20	london 7421228
+21	bogota 7102602
+22	dhaka 6493177
+23	lahore 6312576
+24	rio de janeiro 6023742
+25	baghdad 5672516
+26	bangkok 5104475
+27	bangalore 4931603
+28	santiago 4837248
+29	calcutta 4631819
+30	toronto 4612187
+31	rangoon 4477782
+32	sydney 4394585
+33	madras 4328416
+34	wuhan 4184206
+35	saint petersburg 4039751
+36	chongqing 3967028
+37	xian 3953191
+38	chengdu 3950437
+39	los angeles 3877129
+40	alexandria 3811512
+41	tianjin 3766207
+42	melbourne 3730212
+43	ahmadabad 3719933
+44	abidjan 3692570
+45	kano 3626204
+46	casablanca 3609698
+47	hyderabad 3598199
+48	ibadan 3565810
+49	singapore 3547809
+50	ankara 3519177
+51	shenyang 3512192
+52	riyadh 3469290
+53	ho chi minh city 3467426
+54	cape town 3433504
+55	berlin 3398362
+56	montreal 3268513
+57	harbin 3229883
+58	guangzhou 3152825
+59	durban 3120340
+60	madrid 3102644
+61	nanjing 3087010
+62	kabul 3043589
+63	pune 2935968
+64	surat 2894675
+65	chicago 2841952
+66	kanpur 2823523
+67	umm durman 2810328
+68	luanda 2776125
+69	addis abeba 2757807
+70	nairobi 2750561
+71	taiyuan 2722475
+72	jaipur 2711937
+73	salvador 2711903
+74	dakar 2702820
+75	dar es salaam 2698651
+76	rome 2643736
+77	mogadishu 2590180
+78	jiddah 2545728
+79	changchun 2537421
+80	taipei 2514794
+81	kiev 2514227
+82	faisalabad 2507302
+83	izmir 2501895
+84	lakhnau 2472250
+85	gizeh 2443490
+86	fortaleza 2416920
+87	cali 2392897
+88	surabaya 2374920
+89	belo horizonte 2373255
+90	mashhad 2307254
+91	nagpur 2228191
+92	harare 2213701
+93	brasilia 2207812
+94	santo domingo 2202016
+95	nagoya 2191291
+96	aleppo 2139878
+97	paris 2110694
+98	jinan 2069266
+99	tangshan 2054526
+100	dalian 2035307
+101	houston 2027712
+102	johannesburg 2026466
+103	medellin 2000001
+104	algiers 1980242
+105	tashkent 1978078
+106	khartoum 1974780
+107	accra 1963460
+108	guayaquil 1952029
+109	maracaibo 1948269
+110	rabat 1894386
+111	jilin 1881977
+112	hangzhou 1878129
+113	bucharest 1877155
+114	nanchang 1871351
+115	conakry 1871185
+116	brisbane 1843459
+117	vancouver 1837970
+118	indore 1837230
+119	caracas 1815681
+120	ecatepec 1806297
+121	medan 1751190
+122	rawalpindi 1743599
+123	minsk 1742123
+124	hamburg 1733846
+125	curitiba 1718433
+126	budapest 1708088
+127	bandung 1699822
+128	soweto 1695094
+129	warsaw 1651676
+130	qingdao 1642245
+131	guadalajara 1640649
+132	pretoria 1619485
+133	patna 1600085
+134	bhopal 1600080
+135	manaus 1598227
+136	xinyang 1590668
+137	kaduna 1582211
+138	damascus 1576843
+139	phnum penh 1573523
+140	barcelona 1570378
+141	vienna 1569315
+142	esfahan 1547241
+143	ludhiana 1545476
+144	kobe 1528487
+145	bekasi 1520204
+146	kaohsiung 1512832
+147	urumqi 1508225
+148	thana 1486453
+149	recife 1478118
+150	kumasi 1468797
+151	kuala lumpur 1453978
+152	philadelphia 1453268
+153	karaj 1448996
+154	perth 1446715
+155	cordoba 1441007
+156	multan 1437644
+157	hanoi 1431377
+158	ha noi 1431377
+159	agra 1430194
+160	phoenix 1428509
+161	tabriz 1424701
+162	novosibirsk 1419016
+163	lanzhou 1417742
+164	bursa 1413485
+165	vadodara 1409565
+166	belem 1407737
+167	juarez 1403025
+168	fushun 1400646
+169	quito 1399814
+170	puebla 1392137
+171	antananarivo 1391506
+172	luoyang 1390581
+173	hefei 1388904
+174	hyderabad 1386840
+175	valencia 1385202
+176	gujranwala 1384869
+177	barranquilla 1380437
+178	tijuana 1376494
+179	lubumbashi 1374808
+180	porto alegre 1372763
+181	tangerang 1372185
+182	handan 1358318
+183	kampala 1353236
+184	suzhou 1343091
+185	khulna 1342429
+186	douala 1338144
+187	makasar 1321832
+188	kawasaki 1306804
+189	montevideo 1305865
+190	yaounde 1299446
+191	bamako 1297390
+192	semarang 1288221
+193	yekaterinburg 1287586
+194	san diego 1287050
+195	pimpri 1284702
+196	nizhniy novgorod 1284176
+197	faridabad 1280909
+198	lusaka 1267458
+199	kalyan 1262355
+200	san antonio 1256810
+201	stockholm 1253309
+202	beirut 1252010
+203	bayrut 1252010
+204	shiraz 1249972
+205	adana 1249680
+206	munich 1246133
+207	palembang 1241334
+208	port-au-prince 1234750
+209	nezahualcoyotl 1232565
+210	peshawar 1219248
+211	rosario 1218497
+212	davao 1212285
+213	dallas 1211704
+214	mandalay 1208227
+215	almaty 1204820
+216	mecca 1199659
+217	ghaziabad 1199306
+218	anshan 1199275
+219	xuzhou 1199193
+220	depok 1198195
+221	maputo 1191613
+222	freetown 1190761
+223	fuzhou 1179720
+224	rajkot 1177434
+225	guiyang 1171633
+226	goiania 1171209
+227	guarulhos 1169601
+228	varanasi 1164520
+229	fez 1160239
+230	milan 1156903
+231	prague 1154508
+232	tripoli 1150990
+233	port harcourt 1148753
+234	hiroshima 1143850
+235	managua 1140499
+236	dubai 1137376
+237	samara 1134742
+238	omsk 1129289
+239	benin 1125126
+240	monterrey 1122912
+241	baku 1116513
+242	brazzaville 1115773
+243	belgrade 1115200
+244	leon 1114662
+245	maiduguri 1112511
+246	wuxi 1108647
+247	kazan 1104750
+248	yerevan 1093499
+249	amritsar 1092528
+250	copenhagen 1089958
+251	taichung 1083582
+252	saitama 1077730
+253	rostov-na-donu 1074495
+254	adelaide 1074168
+255	allahabad 1073544
+256	gaziantep 1066561
+257	visakhapatnam 1063293
+258	chelyabinsk 1062931
+259	sofia 1062065
+260	datong 1052678
+261	tbilisi 1049516
+262	xianyang 1034081
+263	ufa 1033350
+264	campinas 1031573
+265	ouagadougou 1031330
+266	jabalpur 1030276
+267	haora 1027771
+268	huainan 1027655
+269	dublin 1024027
+270	kunming 1023674
+271	brussels 1019022
+272	aurangabad 1016520
+273	qom 1011103
+274	volgograd 1010331
+275	shenzhen 1002592
+276	nova iguacu 1002129
+277	rongcheng 1001985
+278	odesa 1001553
+279	kitakyushu 997545
+280	sholapur 997358
+281	baoding 995652
+282	benxi 987717
+283	zapopan 987555
+284	birmingham 984336
+285	perm 982428
+286	naples 981284
+287	srinagar 975926
+288	zaria 975228
+289	guatemala city 973208
+290	guatemala 973208
+291	mendoza 973047
+292	cologne 968823
+293	calgary 968475
+294	port elizabeth 967722
+295	maceio 955010
+296	cartagena 952036
+297	changzhou 949018
+298	ranchi 945079
+299	marrakesh 942631
+300	sao goncalo 939101
+301	monrovia 935427
+302	irbil 932854
+303	jodhpur 921540
+304	sao luis 917252
+305	chandigarh 914374
+306	madurai 909988
+307	krasnoyarsk 907460
+308	huaibei 903039
+309	cochabamba 900440
+310	guwahati 899132
+311	aba 897613
+312	san jose 897460
+313	bulawayo 897249
+314	pingdingshan 889675
+315	detroit 884941
+316	gwalior 882551
+317	qiqihar 882364
+318	klang 879887
+319	konya 876004
+320	mbuji-mayi 874974
+321	vijayawada 874684
+322	ottawa 874433
+323	maisuru 868385
+324	wenzhou 865672
+325	saratov 863734
+326	ogbomosho 861303
+327	ahvaz 854980
+328	tegucigalpa 850961
+329	turin 846489
+330	naucalpan 846222
+331	ulaanbaatar 844786
+332	arequipa 844000
+333	voronezh 840590
+334	padang 840458
+335	hubli 840285
+336	lvov 830000
+337	tucuman 828402
+338	tangier 825316
+339	edmonton 822319
+340	duque de caxias 818339
+341	jos 816876
+342	ilorin 814246
+343	la paz 812819
+344	barquisimeto 809564
+345	oslo 808690
+346	nanning 803788
+347	johor bahru 802525
+348	mombasa 799727
+349	asgabat 797900
+350	jacksonville 797557
+351	zaporizhzhya 796213
+352	marseille 792823
+353	kathmandu 790612
+354	jalandhar 785234
+355	thiruvananthapuram 784223
+356	sakai 782347
+357	anyang 781129
+358	selam 778462
+359	tiruchchirappalli 775551
+360	hohhot 774477
+361	niamey 774245
+362	indianapolis 773283
+363	valencia 769897
+364	bogor 769328
+365	xining 767531
+366	kermanshah 766742
+367	liuzhou 763168
+368	kota 763141
+369	natal 763057
+370	bhubaneswar 762307
+371	qinhuangdao 759718
+372	hengyang 759602
+373	antalya 758603
+374	cebu 758597
+375	islamabad 756105
+376	cracow 755050
+377	aligarh 753280
+378	pietermaritzburg 750864
+379	taian 750340
+380	trujillo 750004
+381	malang 746780
+382	ciudad guayana 746606
+383	amsterdam 745811
+384	kigali 745526
+385	bareli 745509
+386	teresina 744526
+387	xinxiang 743601
+388	sao bernardo do campo 743386
+389	hegang 743307
+390	riga 742570
+391	columbus 736836
+392	oyo 736113
+393	tainan 734314
+394	quetta 733970
+395	san francisco 732072
+396	campo grande 729164
+397	athens 729139
+398	guadalupe 724949
+399	cucuta 721406
+400	moradabad 721210
+401	langfang 720119
+402	ningbo 719867
+403	yantai 719332
+404	tolyatti 718495
+405	merida 717196
+406	tlalnepantla 715798
+407	jerusalem 714685
+408	chisinau 713805
+409	nouakchott 709835
+410	zhuzhou 709358
+411	chihuahua 708292
+412	bhiwandi 707090
+413	jaboatao 702632
+414	rajshahi 700206
+415	zagreb 698967
+416	sarajevo 696726
+417	tunis 692816
+418	zhangjiakou 692602
+419	cotonou 690584
+420	zigong 689961
+421	fuxin 689050
+422	liaoyang 687890
+423	sevilla 686647
+424	la plata 684318
+425	bangui 684190
+426	raipur 680066
+427	austin 678368
+428	osasco 677869
+429	san luis potosi 677726
+430	gorakhpur 674312
+431	ipoh 673346
+432	zhangdian 669770
+433	palermo 669582
+434	puyang 666322
+435	nantong 666251
+436	mudanjiang 665915
+437	santo andre 662387
+438	aguascalientes 658193
+439	agadir 656110
+440	hamilton 653637
+441	enugu 653436
+442	kryvyy rih 652376
+443	acapulco 652160
+444	joao pessoa 650896
+445	benghazi 650629
+446	krasnodar 649860
+447	shaoyang 649452
+448	guilin 649352
+449	sagamihara 648811
+450	colombo 648119
+451	frankfurt 648034
+452	lilongwe 646738
+453	wahran 646025
+454	mar del plata 645771
+455	quebec 645623
+456	memphis 641608
+457	ulyanovsk 640685
+458	zhanjiang 637790
+459	yogyakarta 636711
+460	zaragoza 635509
+461	wroclaw 634893
+462	zhenjiang 632552
+463	winnipeg 632069
+464	dandong 631973
+465	izhevsk 631044
+466	shaoguan 628749
+467	yancheng 628441
+468	foshan 627348
+469	contagem 627132
+470	bhilai 625203
+471	jibuti 623891
+472	saltillo 621270
+473	fort worth 618119
+474	jamshedpur 616404
+475	haikou 615835
+476	sao jose dos campos 613776
+477	mersin 612540
+478	taizhou 612356
+479	queretaro 611803
+480	xingtai 611739
+481	baltimore 610892
+482	glasgow 610271
+483	yaroslavl 606735
+484	benoni 605363
+485	hamamatsu 605105
+486	kochi 604751
+487	jinzhou 604269
+488	amravati 603885
+489	rotterdam 603851
+490	abu dhabi 603687
+491	hai phong 602718
+492	orumiyeh 602443
+493	kirkuk 601442
+494	barnaul 599586
+495	charlotte 598351
+496	el paso 597181
+497	luancheng 597130
+498	mexicali 597124
+499	hermosillo 595833
+500	rasht 594619
+501	dortmund 594255
+502	kayseri 593164
+503	abeokuta 593140
+504	morelia 592820
+505	stuttgart 591688
+506	yingkou 591159
+507	chimalhuacan 590165
+508	zhangzhou 589831
+509	vladivostok 587029
+510	irkutsk 586702
+511	belfast 585994
+512	genoa 585815
+513	blantyre 584870
+514	kingston 583999
+515	chiclayo 582597
+516	culiacan 582489
+517	hachioji 579402
+518	milwaukee 579180
+519	xiamen 578337
+520	khabarovsk 578307
+521	libreville 578156
+522	kerman 577547
+523	dusseldorf 577139
+524	kaifeng 576915
+525	essen 576914
+526	bengbu 576648
+527	bikaner 576056
+528	banjarmasin 572910
+529	shihezi 572772
+530	bouake 572149
+531	bucaramanga 571827
+532	boston 571281
+533	kuching 570579
+534	poznan 570352
+535	seattle 569369
+536	veracruz 568336
+537	asmara 563948
+538	sokoto 563899
+539	uberlandia 563545
+540	onitsha 561106
+541	funabashi 560754
+542	sorocaba 558874
+543	helsinki 558457
+544	malaga 557875
+545	warangal 557864
+546	denver 555981
+547	santiago 555911
+548	santiago de cuba 555878
+549	surakarta 555368
+550	huaiyin 555230
+551	bhavnagar 555014
+552	bahawalpur 552765
+553	washington 552433
+554	ribeirao preto 551278
+555	aden 550744
+556	jiamusi 549549
+557	antipolo 549541
+558	salta 548288
+559	neijiang 546854
+560	bremen 546429
+561	sharjah 543942
+562	matola 543907
+563	dushanbe 543105
+564	sargodha 542761
+565	vilnius 542381
+566	cancun 542156
+567	portland 540513
+568	maanshan 540198
+569	las vegas 540111
+570	yangzhou 539715
+571	novokuznetsk 539622
+572	kisangani 539164
+573	port said 538377
+574	warri 536068
+575	tanggu 535298
+576	oklahoma city 532950
+577	jiangmen 532419
+578	nashville 530852
+579	beira 530706
+580	guntur 530636
+581	yueyang 528140
+582	cangzhou 527681
+583	san salvador 526013
+584	torreon 524084
+585	dehra dun 522135
+586	cuiaba 521961
+587	lopez mateos 521056
+588	petaling jaya 520712
+589	ryazan 520177
+590	hanover 519144
+591	tyumen 519124
+592	durgapur 518922
+593	tucson 518907
+594	ajmer 517947
+595	lisbon 517798
+596	changde 517780
+597	jiaozuo 517540
+598	ulhasnagar 516625
+599	kolhapur 516184
+600	lipetsk 515659
+601	shiliguri 515623
+602	goteborg 515253
+603	eskisehir 515155
+604	hamadan 514134
+605	penza 512607
+606	tembisa 511671
+607	makati 510383
+608	asuncion 508797
+609	san nicolas de los garza 507837
+610	wuhu 507524
+611	toluca 505903
+612	niigata 505276
+613	duisburg 505271
+614	asansol 504320
+615	arak 503673
+616	astrakhan 502537
+617	zhuhai 501199
+618	gold coast 501175
+619	oshogbo 499444
+620	shashi 498780
+621	reynosa 498670
+622	makhachkala 497967
+623	newcastle 497961
+624	nuremberg 497593
+625	tlaquepaque 493667
+626	leipzig 492637
+627	jamnagar 492087
+628	panchiao 491891
+629	aracaju 490184
+630	san pedro sula 489506
+631	suez 488124
+632	albuquerque 487378
+633	tomsk 485523
+634	nanded 485150
+635	saharanpur 484921
+636	gulbarga 483655
+637	bhatpara 483175
+638	long beach 482618
+639	feira de santana 481926
+640	shah alam 481670
+641	himeji 481496
+642	tuxtla gutierrez 481143
+643	gomel 481000
+644	dresden 480801
+645	hargeysa 478283
+646	yazd 477926
+647	sialkot 477537
+648	kemerovo 477096
+649	yichang 476725
+650	the hague 476587
+651	cuautitlan izcalli 475199
+652	yinchuan 475101
+653	skopje 474887
+654	vereeniging 474680
+655	maoming 473251
+656	da nang 472255
+657	londrina 471836
+658	jiaojiang 470804
+659	matsudo 470287
+660	juiz de fora 470201
+661	san juan 469958
+662	liverpool 468946
+663	nishinomiya 468929
+664	tula 468830
+665	kawaguchi 468574
+666	sacramento 467898
+667	zunyi 466292
+668	jiaxing 466101
+669	belford roxo 466101
+670	jammu 465600
+671	fresno 465183
+672	lyon 463700
+673	kananga 463556
+674	bloemfontein 463084
+675	xiangfan 462956
+676	gdansk 461865
+677	calabar 461832
+678	panzhihua 461513
+679	joinville 461312
+680	zamboanga 460879
+681	mixco 460576
+682	antwerp 459805
+683	new orleans 459336
+684	ichikawa 458249
+685	ujjain 457395
+686	kirov 457387
+687	kota kinabalu 457375
+688	durango 457154
+689	niteroi 456461
+690	hengshui 456356
+691	chitungwiza 456206
+692	santa fe 456044
+693	pontianak 455226
+694	leeds 455124
+695	sao joao de meriti 454855
+696	bacolod 453954
+697	manado 451910
+698	jining 450327
+699	constantine 450126
+700	mesa 449878
+701	urfa 449785
+702	cleveland 449514
+703	virginia beach 449386
+704	chengde 449325
+705	xuchang 449258
+706	sheffield 447048
+707	cheboksary 446786
+708	cagayan de oro 445212
+709	boksburg 445182
+710	rajpur 444549
+711	amagasaki 442176
+712	malatya 442046
+713	kansas city 442028
+714	dasmarinas 441878
+715	pereira 440123
+716	carrefour 439590
+717	iquitos 439114
+718	mawlamyine 438907
+719	baoji 438295
+720	kurashiki 437585
+721	garoua 436932
+722	mwanza 436811
+723	kousseri 435986
+724	tirunelveli 435882
+725	edinburgh 435794
+726	malegaon 435397
+727	matamoros 435159
+728	kaliningrad 434959
+729	ananindeua 433956
+730	balikpapan 433939
+731	dadiangas 432571
+732	namangan 432479
+733	katsina 432179
+734	welkom 432070
+735	santa marta 431788
+736	el mahalla el kubra 431088
+737	bristol 430714
+738	yokosuka 428999
+739	akola 428892
+740	belgaum 428756
+741	luqiao 427890
+742	bryansk 427241
+743	xalapa 425166
+744	barcelona 424819
+745	chaozhou 424787
+746	gaya 423737
+747	bratislava 423737
+748	atlanta 422908
+749	likasi 422726
+750	luxor 422408
+751	ibague 421689
+752	east london 421562
+753	shaoxing 421283
+754	erzurum 420919
+755	ivanovo 420843
+756	akure 420623
+757	asyut 420614
+758	kenitra 420534
+759	jambi 420391
+760	korba 419326
+761	bokaro 418578
+762	san juan 418140
+763	sukkur 417923
+764	auckland 417910
+765	mangaluru 417423
+766	luohe 417356
+767	shymkent 414059
+768	hsinchu 413683
+769	szczecin 413658
+770	omaha 413487
+771	magnitogorsk 413357
+772	jhansi 412968
+773	florianopolis 412731
+774	santos 411411
+775	toulouse 411145
+776	maturin 410967
+777	ardabil 410773
+778	murcia 410364
+779	chaoyang 410005
+780	kursk 409435
+781	kitchener 409111
+782	panama 408188
+783	shiyan 408055
+784	santiago del estero 407636
+785	bien hoa 407224
+786	resistencia 406967
+787	ribeirao das neves 406840
+788	hirakata 406335
+789	denpasar 405959
+790	tanta 404934
+791	newcastle 404849
+792	jixi 403759
+793	zanzibar 403670
+794	tonala 401616
+795	kassala 401514
+796	kitwe 400955
+797	tver 400216
+798	machida 399971
+799	yangjiang 399735
+800	tiruppur 397554
+801	keelung 397516
+802	villa nueva 397158
+803	manchester 395516
+804	maracay 395412
+805	vila velha 394937
+806	weifang 394732
+807	fujisawa 394630
+808	oakland 394579
+809	ndola 394559
+810	samsun 394261
+811	kollam 394198
+812	serra 394160
+813	tallinn 394023
+814	bamenda 393871
+815	bello 392945
+816	xinpu 392444
+817	sandakan 392332
+818	qandahar 391230
+819	diadema 390641
+820	corrientes 390481
+821	samut prakan 388921
+822	nampula 388526
+823	bissau 388094
+824	iloilo 387748
+825	campos 387422
+826	bochum 387061
+827	misratah 386120
+828	maua 386077
+829	abomey-calavi 385823
+830	toyonaka 384463
+831	honolulu 384241
+832	betim 384038
+833	fukuyama 383302
+834	miami 382894
+835	pasto 382242
+836	tulsa 382005
+837	caxias do sul 381277
+838	nizhniy tagil 381121
+839	huancayo 380098
+840	dezhou 379555
+841	palma 378884
+842	krugersdorp 378833
+843	panihati 378741
+844	chungho 378389
+845	toyohashi 378377
+846	cimahi 378027
+847	brno 377407
+848	delmas 377194
+849	zhoukou 377061
+850	makiyivka 376607
+851	kahramanmaras 376247
+852	nonthaburi 375826
+853	taoyuan 375366
+854	tirana 374801
+855	sao jose do rio preto 374706
+856	kaunas 374655
+857	xuanhua 373422
+858	colorado springs 373072
+859	seremban 372931
+860	ife 372191
+861	pingxiang 372123
+862	van 371911
+863	bobo dioulasso 370809
+864	tel aviv-yafo 370480
+865	abadan 370220
+866	minneapolis 367773
+867	arlington 367535
+868	bologna 367168
+869	ahmadnagar 367168
+870	dhule 367010
+871	olinda 366761
+872	bydgoszcz 366452
+873	kuantan 366253
+874	petare 365959
+875	xico 365793
+876	las palmas 365418
+877	tetouan 365355
+878	larkana 364168
+879	christchurch 363925
+880	wuppertal 363240
+881	stavropol 363069
+882	villahermosa 362416
+883	toyota 362386
+884	zhaoqing 361969
+885	bhagalpur 361587
+886	shekhupura 361408
+887	carapicuiba 361120
+888	sanchung 360829
+889	tamale 360644
+890	ulan-ude 360281
+891	lublin 360044
+892	neuquen 359037
+893	anqing 358661
+894	taraz 358167
+895	manizales 357819
+896	sanmenxia 357767
+897	zanjan 357489
+898	iwaki 357313
+899	bacoor 356987
+900	asahikawa 356615
+901	ambon 355607
+902	tabuk 355469
+903	wichita 355244
+904	samarinda 355223
+905	mazatlan 354730
+906	takatsuki 354472
+907	thessaloniki 354291
+908	neiva 352859
+909	okazaki 352364
+910	apodaca 352246
+911	vinnytsya 352113
+912	anshun 351936
+913	suita 351634
+914	tema 351556
+915	ixtapaluca 351015
+916	muzaffarnagar 349741
+917	nuevo laredo 349562
+918	bilbao 349270
+919	sanandaj 349200
+920	latur 348994
+921	campina grande 348943
+922	camaguey 347572
+923	florence 347194
+924	london 346774
+925	chifeng 346654
+926	zurich 346185
+927	astana 345621
+928	belgorod 345293
+929	kusti 345102
+930	qitaihe 345033
+931	doha 344939
+932	turmero 344746
+933	arkhangelsk 344603
+934	boma 344522
+935	cuernavaca 343785
+936	kurgan 343132
+937	santa ana 343054
+938	soledad 342562
+939	zhongshan 342306
+940	piracicaba 342216
+941	buraydah 341981
+942	nice 341621
+943	jhang 341311
+944	arusha 341155
+945	ambattur 341078
+946	iseyin 340707
+947	koriyama 340563
+948	kashiwa 340228
+949	aksu 340020
+950	irapuato 339568
+951	tokorozawa 339441
+952	leicester 339240
+953	kaluga 338982
+954	macapa 338937
+955	raleigh 338759
+956	kawagoe 337937
+957	tungi 337620
+958	bellary 336710
+959	itaquaquecetuba 336686
+960	san jose 335056
+961	bauru 335031
+962	fengshan 334443
+963	tieling 333907
+964	anaheim 333689
+965	qazvin 333652
+966	orel 333310
+967	muzaffarpur 333235
+968	kamarhati 332997
+969	wad madani 332752
+970	tucheng 332405
+971	vinnitsa 332400
+972	montes claros 332384
+973	plovdiv 332088
+974	khorramshahr 331254
+975	cariacica 330681
+976	mathura 330543
+977	bujumbura 330539
+978	khorramabad 329847
+979	soyapango 329704
+980	patiala 329248
+981	pavlodar 329014
+982	asfi 328883
+983	chandrapur 328377
+984	pacet 328324
+985	canoas 328297
+986	sochi 327613
+987	bielefeld 327198
+988	yanji 326957
+989	piura 326592
+990	bhilwara 326454
+991	moji das cruzes 325753
+992	thrissur 325140
+993	brahmapur 324753
+994	tampa 324465
+995	sao vicente 324464
+996	canberra 324025
+997	volzhskiy 323298
+998	villavicencio 321721
+999	jundiai 321595
+1000	san miguelito 321516
