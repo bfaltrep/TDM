@@ -22,6 +22,10 @@ import org.apache.hadoop.util.ToolRunner;
 
 public class ScalableJoin  extends Configured implements Tool {
 
+	/*
+	 * --- WritableComparable ---
+	*/
+	
 	public static class TaggedKey implements WritableComparable{
 		private String _country;
 		private String _region;
@@ -87,6 +91,10 @@ public class ScalableJoin  extends Configured implements Tool {
 		}
 	}
 	
+	/*
+	 * --- Comparators ---
+	*/
+	
 	public static class JoinGrouping extends WritableComparator{
 		 public JoinGrouping() {
 	            // evite l'appel au constructeur par defaut qui provoque une NullPointerException
@@ -108,7 +116,11 @@ public class ScalableJoin  extends Configured implements Tool {
 			 }
 
 	}
-		
+	
+	/*
+	 * --- Mappers ---
+	*/
+	
 	public static class MapperCities extends Mapper<Object, Text, TaggedKey, Text>{
 		  public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			  String[] val = value.toString().split(",");
@@ -125,6 +137,10 @@ public class ScalableJoin  extends Configured implements Tool {
 		  }
 	  }
 	  
+	/*
+	 * --- Partitioner ---
+	*/
+	
 	public static class SJPartition extends Partitioner<TaggedKey, Text>{
 
 		@Override
@@ -135,6 +151,10 @@ public class ScalableJoin  extends Configured implements Tool {
 				return key.getNaturalKeyHashCode() % numPartitions;
 		}
 	}
+	
+	/*
+	 * --- Reducer ---
+	*/
 	
 	public static class SJReducer extends Reducer<TaggedKey,Text,Text,Text> {
 	    public void reduce(TaggedKey key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
