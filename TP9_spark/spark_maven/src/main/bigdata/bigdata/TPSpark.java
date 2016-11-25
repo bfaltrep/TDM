@@ -15,15 +15,18 @@ import scala.Tuple2;
 
 /*
  spark-submit --master yarn --deploy-mode client --class bigdata.TPSpark --num-executors 4 spark_maven/target/TPSpark-0.0.1.jar
+ /user/bfaltrep/cities.txt
+ 
+ spark-submit --master yarn --deploy-mode client --class bigdata.TPSpark --num-executors 4 TPSpark-0.0.1.jar /cities.txt
 */
 
 public class TPSpark {
 
-	public static String msg = "                    -----> ICI     ";
+	public static String msg = "                    -----> RESULTATS:       ";
 	
-	public static void Ex1(JavaSparkContext context){
+	public static void Ex1(JavaSparkContext context, String path){
 		//recup file. Input data
-		JavaRDD<String> rdd_cities = context.textFile("/user/bfaltrep/cities.txt");
+		JavaRDD<String> rdd_cities = context.textFile(path);
 		
 		int nb_part = rdd_cities.getNumPartitions();
 		System.out.println(msg+nb_part);
@@ -32,11 +35,14 @@ public class TPSpark {
 		rdd_cities.coalesce(nb_executors);
 		System.out.println(msg+nb_executors);
 	}
+	//couleur terminal system.out.println("\033[0m");
+	//chaque composant \033[0;34m
+	//\033[0m final pour reset la suite
 	
-	public static void Ex2_3(JavaSparkContext context){
+	public static void Ex2_3(JavaSparkContext context, String path){
 
 		@SuppressWarnings("unchecked")
-		JavaRDD<String> rdd_textfile = context.textFile("/user/bfaltrep/cities.txt");
+		JavaRDD<String> rdd_textfile = context.textFile(path);
 		JavaRDD<Tuple2<String,Double>>  rdd_cities = rdd_textfile.map(
 				(str) -> new Tuple2<String,Double>(
 						str.split(",")[1], 
@@ -49,8 +55,10 @@ public class TPSpark {
 		System.out.println(msg+"Ex 2 : "+rdd_cities.count());
 		System.out.println(msg+"Ex 3 : max("+stat.max()+"), min("+stat.min()+"), sum("+stat.sum()+"), count("+stat.count()+"), mean("+stat.mean()+"), variance("+stat.variance()+")");
 	}
-	public static void Ex4(JavaSparkContext context){
-		JavaRDD<String> rdd_textfile = context.textFile("/user/bfaltrep/cities.txt");
+	
+	public static void Ex4(JavaSparkContext context, String path){
+		JavaRDD<String> rdd_textfile = context.textFile(path);
+		//creer un rdd contenant uniquement les villes valides
 		JavaDoubleRDD rdd = rdd_textfile.mapToDouble( (String str) -> {
 			String[] token = str.split(",");
 			try{
@@ -60,9 +68,10 @@ public class TPSpark {
 			}
 		}).filter( (x) -> {return x > -1;});
 		
+		//création de nos clés
 		JavaPairRDD<Integer,Double> rdd2 = rdd.keyBy((x) -> (int) Math.floor(Math.log10(x)));
-		StatCounter sc = new StatCounter();
-		JavaPairRDD<Integer,StatCounter> rdd3 = rdd2.aggregateByKey(sc, ((agg, x) -> agg.merge(x)), (agg1, agg2) -> { agg1.merge(agg2); return agg1;});
+		
+		JavaPairRDD<Integer,StatCounter> rdd3 = rdd2.aggregateByKey(new StatCounter(), ((agg, x) -> agg.merge(x)), (agg1, agg2) -> { agg1.merge(agg2); return agg1;}).sortByKey();
 		
 		
 		System.out.println(msg+"  DEBUT");
@@ -70,8 +79,9 @@ public class TPSpark {
 		Iterator<Tuple2<Integer, StatCounter>> it = rdd3.toLocalIterator();
 		while(it.hasNext()){
 			Tuple2<Integer, StatCounter> t = it.next();
-			System.out.print(msg+t._1+" - "+t._2.count());
+			System.out.print(msg+Math.pow(10, t._1)+" - "+t._2.count()+"\n");
 		}
+		System.out.println();
 		System.out.println(msg+"  FIN");
 		
 		/* Version courte :
@@ -92,9 +102,9 @@ public class TPSpark {
 		
 		SparkConf conf = new SparkConf().setAppName("TP_Spark");
 		JavaSparkContext context = new JavaSparkContext(conf);
-		//Ex1(context);
-		//Ex2_3(context);
-		Ex4(context);
+		//Ex1(context, args[0]);
+		//Ex2_3(context, args[0]);
+		Ex4(context, args[0]);
 	}
 	
 }
