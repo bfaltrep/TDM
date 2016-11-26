@@ -1,5 +1,6 @@
 package bigdata;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import org.apache.spark.SparkConf;
@@ -11,43 +12,22 @@ import org.apache.spark.util.StatCounter;
 
 import scala.Tuple2;
 
-//spark-submit run-example --master yarn --deploy-mode client --jars /net/ens/BigData/spark-2.0.1/examples/jars/spark-examples_2.11-2.0.1.jar --class org.apache.spark.examples.JavaSparkPi --executor-cores 2 --num-executors 4 --executor-memory 512M SparkPi 100
-
 /*
- spark-submit --master yarn --deploy-mode client --class bigdata.TPSpark --num-executors 4 spark_maven/target/TPSpark-0.0.1.jar
- /user/bfaltrep/cities.txt
- 
+ first try : 
+ spark-submit run-example --master yarn --deploy-mode client --jars /net/ens/BigData/spark-2.0.1/examples/jars/spark-examples_2.11-2.0.1.jar --class org.apache.spark.examples.JavaSparkPi --executor-cores 2 --num-executors 4 --executor-memory 512M SparkPi 100
+
+
+ Ex 1,2,3 : 
  spark-submit --master yarn --deploy-mode client --class bigdata.TPSpark --num-executors 4 TPSpark-0.0.1.jar /cities.txt
+ 
+ Ex5 : 
+ spark-submit --master yarn --deploy-mode client --class bigdata.TPSpark --num-executors 4 TPSpark-0.0.1.jar /cities.txt /region.txt /join
+
 */
 
 public class TPSpark {
-
-	// usefull
 	
 	public static String msg = "                    -----> RESULTATS:       ";
-	
-	public static class Ex5Row{
-		public String _country;
-		public String _city;
-		public String _accent;
-		public String _region;
-		public String _population;
-		public String _latitude;
-		public String _longitude;
-		public String _regionName;
-		
-		public Ex5Row(String country, String city, String accent, String region, String population, String latitude, String longitude){
-			_country = country; 
-			_city = city; 
-			_accent = accent; 
-			_region = region; 
-			_population = population; 
-			_latitude = latitude;
-			_longitude = longitude;	
-		}
-
-		
-	}
 
 	//Exercises
 	
@@ -68,7 +48,6 @@ public class TPSpark {
 	
 	public static void Ex2_3(JavaSparkContext context, String path){
 
-		@SuppressWarnings("unchecked")
 		JavaRDD<String> rdd_textfile = context.textFile(path);
 		JavaRDD<Tuple2<String,Double>>  rdd_cities = rdd_textfile.map(
 				(str) -> new Tuple2<String,Double>(
@@ -126,34 +105,32 @@ public class TPSpark {
 		 */
 	}
 	
-	public static void Ex5(JavaSparkContext context, String path_cities, String path_region){
+	public static void Ex5(JavaSparkContext context, String path_cities, String path_region, String path_output){
 		// translate cities data
-		JavaRDD<Ex5Row> rdd_cities = context.textFile(path_cities).map( (String str) -> {
+		JavaRDD<Tuple2<String,String>> rdd_cities = context.textFile(path_cities).map( (String str) -> {
 			String[] token = str.split(",");
-			return new Ex5Row(token[0].toUpperCase(),token[1],token[2],token[3].toUpperCase(),token[4],token[5],token[6]);
-		}).filter((tok)->{
-			return (!(tok._region.matches("") && tok._country.matches("")));
+			String value = new String(token[1]+","+token[2]+","+token[4]+","+token[5]+","+token[6]);
+			return new Tuple2<String, String>(new String(token[0].toUpperCase()+","+token[3].toUpperCase()),value);
+		}).filter((Tuple2<String,String> tok)->{
+			return (!(tok._1.split(",")[0].matches("") && tok._1.split(",")[1].matches("")));
 		});
 		
 		// translate regions data
-		/*JavaRDD<Tuple2<String,String>> rdd_region = context.textFile(path_region).map((String str) -> {
+		JavaRDD<Tuple2<String,String>> rdd_region = context.textFile(path_region).map((String str) -> {
 			String[] token = str.split(",");
 			return new Tuple2<String,String>(new String(token[0].toUpperCase()+","+token[1].toUpperCase()), token[2]);
 		}).filter((tik)->{
 			String[] str = tik._1.split(",");
 			return(!(str[0].matches("") && str[1].matches("")));
-		});*/
-		
-		JavaPairRDD<String,String> rdd_region = context.textFile(path_region).mapToPair((String str) -> {
-			String[] token = str.split(",");
-			return new PairFunction<String, String> //new Tuple2<String,String>(new String(token[0].toUpperCase()+","+token[1].toUpperCase()), token[2]);
-		}).filter((tik)->{
-			String[] str = tik._1.split(",");
-			return(!(str[0].matches("") && str[1].matches("")));
 		});
 		
-		//JavaRDD<Ex5Row> rdd_res = rdd_region.j
+		JavaPairRDD<String,String> rdd_region2 = JavaPairRDD.fromJavaRDD(rdd_region);
+		JavaPairRDD<String,String> rdd_cities2 = JavaPairRDD.fromJavaRDD(rdd_cities);
 		
+		JavaPairRDD<String,Tuple2<String,String>> rdd_res = rdd_cities2.join(rdd_region2);
+		
+		System.out.println(msg+"nb cities with region : "+rdd_res.count()); //TMP
+		rdd_res.saveAsTextFile(path_output);
 		
 		//Iterator<Tuple2<String,String>> region_it = rdd_region.toLocalIterator();
 	}
@@ -164,7 +141,12 @@ public class TPSpark {
 		JavaSparkContext context = new JavaSparkContext(conf);
 		//Ex1(context, args[0]);
 		//Ex2_3(context, args[0]);
-		Ex5(context, args[0], args[1]);
+		if(args.length != 3){
+			System.out.println(msg+"WAAAAAREEENIIIIINGUUUEEEEUH ! We need 3 paths as arguments: inputfile_cities inputfile_region outputdirectory.");
+			System.exit(-1);
+		}
+		
+		Ex5(context, args[0], args[1], args[2]);
 	}
 	
 }
