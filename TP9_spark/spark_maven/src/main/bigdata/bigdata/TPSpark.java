@@ -36,11 +36,11 @@ public class TPSpark {
 		JavaRDD<String> rdd_cities = context.textFile(path);
 		
 		int nb_part = rdd_cities.getNumPartitions();
-		System.out.println(msg+nb_part);
+		System.out.println(msg+"Ex 1 : nombre de partitions initial "+nb_part);
 		
 		int nb_executors = context.getConf().getInt("spark.executor.instances",1); 
-		rdd_cities.coalesce(nb_executors);
-		System.out.println(msg+nb_executors);
+		rdd_cities = rdd_cities.repartition(nb_executors);
+		System.out.println(msg+"Ex 1 : nombre de partitions final "+rdd_cities.getNumPartitions());
 	}
 	
 	public static void Ex2_3(JavaSparkContext context, String path){
@@ -77,16 +77,15 @@ public class TPSpark {
 		
 		JavaPairRDD<Integer,StatCounter> rdd3 = rdd2.aggregateByKey(new StatCounter(), ((agg, x) -> agg.merge(x)), (agg1, agg2) -> { agg1.merge(agg2); return agg1;}).sortByKey();
 		
-		
-		System.out.println(msg+"  DEBUT");
-		//rdd3.foreach((Tuple2<Integer,StatCounter> t) -> {System.out.print(msg+t._1+" - "+t._2.count());});
+		System.out.println(msg+"Ex 4 : DEBUT");
+		//test initial : rdd3.foreach((Tuple2<Integer,StatCounter> t) -> {System.out.print(msg+Math.pow(10, t._1)+" - "+t._2.count());});
 		Iterator<Tuple2<Integer, StatCounter>> it = rdd3.toLocalIterator();
 		while(it.hasNext()){
 			Tuple2<Integer, StatCounter> t = it.next();
 			System.out.print(msg+Math.pow(10, t._1)+" - "+t._2.count()+"\n");
 		}
 		System.out.println();
-		System.out.println(msg+"  FIN");
+		System.out.println(msg+"Ex 4 : FIN");
 		
 		/* Version courte :
 		 List<Tuple2<Integer,StatCounter>> result = rdd.KeyBy( (x) -> (int) Math.floor(Math.log10(x)).aggregateByKey( new StatCounter(), (agg, x) -> agg.merge(x), (agg1, agg2) -> agg1.merge(agg2)).sortByKey().mapToPair( (x) -> new Tuple2<Integer, StatCounter> ( (in) Math.pow(10,x._1), x._2).collect;
@@ -126,10 +125,8 @@ public class TPSpark {
 		
 		JavaPairRDD<String,Tuple2<String,String>> rdd_res = rdd_cities2.join(rdd_region2);
 		
-		System.out.println(msg+"nb cities with region : "+rdd_res.count()); //TMP
+		System.out.println(msg+"nb cities with region : "+rdd_res.count()+" but results are into "+path_output+" directory.");
 		rdd_res.saveAsTextFile(path_output);
-		
-		//Iterator<Tuple2<String,String>> region_it = rdd_region.toLocalIterator();
 	}
 	
 	public static void main(String[] args) {
@@ -139,6 +136,7 @@ public class TPSpark {
 		
 		Ex1(context, args[0]);
 		Ex2_3(context, args[0]);
+		Ex4(context, args[0]);
 		
 		if(args.length != 3){
 			System.out.println(msg+"WAAAAAREEEUUUNIIIIINGUUUEEEEUH ! We need 3 paths as arguments: inputfile_cities inputfile_region outputdirectory.");
