@@ -22,7 +22,34 @@ import scala.Tuple2;
 
 public class TPSpark {
 
+	// usefull
+	
 	public static String msg = "                    -----> RESULTATS:       ";
+	
+	public static class Ex5Row{
+		public String _country;
+		public String _city;
+		public String _accent;
+		public String _region;
+		public String _population;
+		public String _latitude;
+		public String _longitude;
+		public String _regionName;
+		
+		public Ex5Row(String country, String city, String accent, String region, String population, String latitude, String longitude){
+			_country = country; 
+			_city = city; 
+			_accent = accent; 
+			_region = region; 
+			_population = population; 
+			_latitude = latitude;
+			_longitude = longitude;	
+		}
+
+		
+	}
+
+	//Exercises
 	
 	public static void Ex1(JavaSparkContext context, String path){
 		//recup file. Input data
@@ -47,6 +74,7 @@ public class TPSpark {
 				(str) -> new Tuple2<String,Double>(
 						str.split(",")[1], 
 						Double.parseDouble(str.split(",")[4].matches("")||str.split(",")[4].matches("Population")?"-1":str.split(",")[4])));
+		
 		rdd_cities = rdd_cities.filter((Tuple2<String,Double> t) -> { if(t._1.matches("")||t._2 == -1) return false;else return true; });
 		JavaDoubleRDD rdd_stats = rdd_cities.mapToDouble((Tuple2<String,Double> t) -> {return new Double(t._2);});
 		StatCounter stat = rdd_stats.stats();
@@ -98,13 +126,45 @@ public class TPSpark {
 		 */
 	}
 	
+	public static void Ex5(JavaSparkContext context, String path_cities, String path_region){
+		// translate cities data
+		JavaRDD<Ex5Row> rdd_cities = context.textFile(path_cities).map( (String str) -> {
+			String[] token = str.split(",");
+			return new Ex5Row(token[0].toUpperCase(),token[1],token[2],token[3].toUpperCase(),token[4],token[5],token[6]);
+		}).filter((tok)->{
+			return (!(tok._region.matches("") && tok._country.matches("")));
+		});
+		
+		// translate regions data
+		/*JavaRDD<Tuple2<String,String>> rdd_region = context.textFile(path_region).map((String str) -> {
+			String[] token = str.split(",");
+			return new Tuple2<String,String>(new String(token[0].toUpperCase()+","+token[1].toUpperCase()), token[2]);
+		}).filter((tik)->{
+			String[] str = tik._1.split(",");
+			return(!(str[0].matches("") && str[1].matches("")));
+		});*/
+		
+		JavaPairRDD<String,String> rdd_region = context.textFile(path_region).mapToPair((String str) -> {
+			String[] token = str.split(",");
+			return new PairFunction<String, String> //new Tuple2<String,String>(new String(token[0].toUpperCase()+","+token[1].toUpperCase()), token[2]);
+		}).filter((tik)->{
+			String[] str = tik._1.split(",");
+			return(!(str[0].matches("") && str[1].matches("")));
+		});
+		
+		//JavaRDD<Ex5Row> rdd_res = rdd_region.j
+		
+		
+		//Iterator<Tuple2<String,String>> region_it = rdd_region.toLocalIterator();
+	}
+	
 	public static void main(String[] args) {
 		
 		SparkConf conf = new SparkConf().setAppName("TP_Spark");
 		JavaSparkContext context = new JavaSparkContext(conf);
 		//Ex1(context, args[0]);
 		//Ex2_3(context, args[0]);
-		Ex4(context, args[0]);
+		Ex5(context, args[0], args[1]);
 	}
 	
 }
