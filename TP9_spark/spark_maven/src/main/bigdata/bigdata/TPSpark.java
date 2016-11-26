@@ -27,12 +27,12 @@ import scala.Tuple2;
 
 public class TPSpark {
 	
-	public static String msg = "                    -----> RESULTATS:       ";
+	public static String msg = "\033[0;34m                    -----> RESULTATS:       \033[0m";
 
 	//Exercises
 	
 	public static void Ex1(JavaSparkContext context, String path){
-		//recup file. Input data
+		//recup file
 		JavaRDD<String> rdd_cities = context.textFile(path);
 		
 		int nb_part = rdd_cities.getNumPartitions();
@@ -42,9 +42,6 @@ public class TPSpark {
 		rdd_cities.coalesce(nb_executors);
 		System.out.println(msg+nb_executors);
 	}
-	//couleur terminal system.out.println("\033[0m");
-	//chaque composant \033[0;34m
-	//\033[0m final pour reset la suite
 	
 	public static void Ex2_3(JavaSparkContext context, String path){
 
@@ -139,10 +136,12 @@ public class TPSpark {
 		
 		SparkConf conf = new SparkConf().setAppName("TP_Spark");
 		JavaSparkContext context = new JavaSparkContext(conf);
-		//Ex1(context, args[0]);
-		//Ex2_3(context, args[0]);
+		
+		Ex1(context, args[0]);
+		Ex2_3(context, args[0]);
+		
 		if(args.length != 3){
-			System.out.println(msg+"WAAAAAREEENIIIIINGUUUEEEEUH ! We need 3 paths as arguments: inputfile_cities inputfile_region outputdirectory.");
+			System.out.println(msg+"WAAAAAREEEUUUNIIIIINGUUUEEEEUH ! We need 3 paths as arguments: inputfile_cities inputfile_region outputdirectory.");
 			System.exit(-1);
 		}
 		
