@@ -1,11 +1,13 @@
 import java.awt.geom.Point2D;
+import java.io.BufferedWriter;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,6 +17,8 @@ import java.util.Set;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
@@ -26,6 +30,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.util.Progressable;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -208,38 +213,70 @@ public class Kmeans extends Configured implements Tool {
 		return val;
 	}
 	
-	private String initPivots(int nb_nodes){
-		
-		/* write them into a tmp file*/
-		
-	    String path = "/tmp/"+"kmeans"+(int)(Math.random()*100)+".txt";
-	    java.io.File file = new java.io.File(path);
-	    java.io.FileOutputStream filestream = null;
-	    java.io.ObjectOutputStream objectstream = null;
+	private boolean comparePivots(String path1, String path2){
+		URI uri_1, uri_2;
+		FileSystem fs_1, fs_2;
+		Path path_1, path_2;
+		boolean res = true;
+		try {
+			uri_1 = new URI(path1).normalize();
+			uri_2 = new URI(path2).normalize();
+			
+			fs_1 = FileSystem.get(uri_1, new Configuration(), "bfaltrep");
+			fs_2 = FileSystem.get(uri_2, new Configuration(), "bfaltrep");
+			
+			path_1 = new Path(uri_1.getPath());
+			path_2 = new Path(uri_2.getPath());
+			
+			//FSBufferedReader fsinput_1 = fs_1.open(path_1);
+			FSDataInputStream fsinput_2 = fs_2.open(path_2);
+			
+			fsinput_2.readLine();
+			
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+	
+	private String initPivots(int nb_nodes, Configuration conf){
+		String path_str = "/tmp/"+"kmeans"+(int)(Math.random()*100)+".txt";
 	    try
 	    {
-		    file.createNewFile();
-		    filestream = new java.io.FileOutputStream(file);
-		    objectstream = new ObjectOutputStream(filestream);
-		    
-		    for (int i = 0; i < nb_nodes; i++) {
-				objectstream.writeObject(new Point2D.Double(generatePoint(),generatePoint()));
+			URI uri = new URI(path_str).normalize();
+			FileSystem fs = FileSystem.get(uri, conf, "bfaltrep");
+			Path path = new Path(uri.getPath());
+			
+			if ( fs.exists(path)) { fs.delete(path, true); } 
+			OutputStream os = fs.create(path,
+			    new Progressable() {
+			        public void progress() {
+			            System.out.println("writing pivots.");
+			        } });
+			
+			//writing
+			BufferedWriter br = new BufferedWriter( new OutputStreamWriter( os, "UTF-8" ) );
+			for (int i = 0; i < nb_nodes; i++) {
+				br.write(generatePoint()+","+generatePoint());
 			}
-		    
-		    objectstream.close();
-		    filestream.close();
+			br.close();
+			fs.close();
 		}catch (Exception e){e.printStackTrace();}
-	    return path;
+	    return path_str;
 	}
 	
 	public int run(String args[]) throws IOException, ClassNotFoundException, InterruptedException {
 	    Configuration conf = new Configuration();
-	    
-	    String path_pivots = initPivots(Integer.parseInt(args[2]));
+	    // -- generate pivots
+	    String path_pivots = initPivots(Integer.parseInt(args[2]), conf);
 	    conf.set("nb_nodes",args[2]);
 	    
-	    Job job = Job.getInstance(conf, "TP9");
 	    
+	    Job job = Job.getInstance(conf, "TP9");
 	    try {
 			job.addCacheFile(new URI(path_pivots));
 		} catch (URISyntaxException e){e.printStackTrace();}
