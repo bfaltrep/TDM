@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -85,7 +84,6 @@ public class Kmeans1D extends Configured implements Tool {
 	
 	/*/\ utiliser des sequences files*/
 	
-	
 	/* Utils */
 
 	private static int getClosest(Double pt, Set<Double> pivots){
@@ -105,6 +103,22 @@ public class Kmeans1D extends Configured implements Tool {
 		return closest;
 	}
 		
+	private static Set<Double> readCachedFile(URI path_str, int asked){
+		Set<Double> pivots = new HashSet<Double>();
+	    try {
+	    	BufferedReader br = new BufferedReader( new FileReader(new File (path_str.getPath()).getName()));
+			String pattern;
+		    while ((pattern = br.readLine()) != null) {
+		       pivots.add(Double.parseDouble(pattern.split(",")[asked]));
+			}
+		    br.close();
+		} catch (EOFException exc) {}
+	    catch(Exception exc){
+	    	exc.printStackTrace();
+	    }
+	    return pivots;
+	}
+	
 	/* MapReduce Part */
 	
 	// ----- MAPPER
@@ -117,27 +131,17 @@ public class Kmeans1D extends Configured implements Tool {
 	public static class MapperKMeans extends Mapper<Object, Text, LongWritable, AverageWritable>{
 		private Set<Double> _pivots;
 		private int _asked;
-				
-		private void readCachedFile(URI path_str){
-		    _pivots = new HashSet<Double>();
-		    try {
-		    	BufferedReader br = new BufferedReader( new FileReader(new File (path_str.getPath()).getName()));
-				String pattern;
-			    while ((pattern = br.readLine()) != null) {
-			      _pivots.add(Double.parseDouble(pattern.split(",")[_asked]));
-				}
-			} catch (EOFException exc) {}
-		    catch(Exception exc){
-		    	exc.printStackTrace();
-		    }
-		}
 		
 		protected void setup(Context context){
 			try {
 				_asked = context.getConfiguration().getInt("asked",-1);
 				URI[] files = context.getCacheFiles();
-				readCachedFile(files[0]);
-			} catch (IOException e) {e.printStackTrace();}		
+				_pivots = readCachedFile(files[0], _asked);
+				List<String> tmp = new Vector<String>();
+				tmp.add("test");
+				context.write(new LongWritable(_pivots.size()), new AverageWritable(0.0,0,tmp));
+			} catch (IOException e) {e.printStackTrace();
+			} catch (InterruptedException e) { e.printStackTrace();}		
 		}
 		
 		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -146,12 +150,11 @@ public class Kmeans1D extends Configured implements Tool {
 			  context.getConfiguration().get("asked");
 			  
 			  if(!val[_asked].matches("") && !val[_asked].matches("Population")){
-				  int closest = getClosest(Double.parseDouble(val[_asked]), _pivots);
+				  //int closest = getClosest(Double.parseDouble(val[_asked]), _pivots);
 				  List<String> tmp = new Vector<String>(); tmp.add(value.toString());
-				  context.write(new LongWritable(closest),new AverageWritable(Double.parseDouble(val[_asked]),1,tmp));
+				 // context.write(new LongWritable(closest),new AverageWritable(Double.parseDouble(val[_asked]),1,tmp));
+				  context.write(new LongWritable(1),new AverageWritable(Double.parseDouble(val[_asked]),1,tmp));
 			  }
-			
-			
 		}
 	}
 	
@@ -161,37 +164,8 @@ public class Kmeans1D extends Configured implements Tool {
 	 * pour chaque clef, cherche la nouvelle ville la plus "centrale" localement. écrit <pivot, <moyenne locale, liste villes>>
 	*/
 	public static class CombinerKMeans extends Reducer<LongWritable,AverageWritable,LongWritable,AverageWritable> {
-		private Set<Double> _pivots;
 		private int _asked;
-		
-		private Set<Double> readCachedFile(String path_str, Context context){
-		    Set<Double> _pivots = new HashSet<Double>();
-		    try {
 				
-				URI uri = new URI(path_str).normalize();
-				FileSystem fs = FileSystem.get(uri, context.getConfiguration(), "bfaltrep");
-				Path path = new Path(uri.getPath());
-				InputStream is = fs.open(path);
-				BufferedReader br = new BufferedReader( new InputStreamReader( is, "UTF-8"));
-				
-				while(br.ready())
-					_pivots.add(Double.parseDouble(br.readLine().split(",")[_asked]));
-			} catch (EOFException exc) {}
-		    catch(Exception exc){
-		    	exc.printStackTrace();
-		    }
-		   return _pivots;
-		}
-
-		protected void setup(Context context){
-			try {
-				_asked = context.getConfiguration().getInt("asked",-1);
-				URI[] files = context.getCacheFiles();
-				
-				_pivots = readCachedFile(files[0].getPath(), context);
-			} catch (IOException e) {e.printStackTrace();}		
-		}
-		
 		public void reduce(LongWritable key, Iterable<AverageWritable> values, Context context) throws IOException, InterruptedException {
 			//reduit ouesh
 			long size = 0;
@@ -247,11 +221,6 @@ public class Kmeans1D extends Configured implements Tool {
 	    	//context.write(new LongWritable(_iteration),new LongWritable(pivot));
 	    }
 	  }
-	
-	
-	
-	
-	
 	
 	/* Runner Part */
 	
@@ -332,23 +301,22 @@ public class Kmeans1D extends Configured implements Tool {
 		return res;
 	}
 	
-	
-	//args : inputfile  output  nb_node  column_asked nb_iteration path_pivots  path_pivots_previous
+	 
+	//args : inputfile  output(unused here)  nb_node  column_asked  nb_iteration path_pivots  path_pivots_previous
 	public int run(String[] args) throws Exception {
 		System.out.println(" pivot "+args[5]+" // previous pivot "+args[6]); //TMP
 		Configuration conf = new Configuration();
-
+		
+		//recup args.
 		String input_file = args[0];
-		String output_file = args[1];
 		int nb_node = Integer.parseInt(args[2]);
 		String column_asked = args[3];
 		int nb_iteration = Integer.parseInt(args[4]);
 		String path_pivots = args[5];
 		String path_pivots_previous = args[6];
 		
-		
 		if( nb_iteration == 0)
-			initPivots(input_file, path_pivots_previous,nb_node, Integer.parseInt(column_asked), conf);
+			initPivots(input_file, path_pivots_previous+"/part-r-00000",nb_node, Integer.parseInt(column_asked), conf);
 		
 		conf.setInt("nb_node", nb_node);
 		conf.set("asked", column_asked);
@@ -379,12 +347,12 @@ public class Kmeans1D extends Configured implements Tool {
 	   
 	    if (job.waitForCompletion(true)){
 	    	System.out.println("CA MARCHE. :)");
-	    	return comparePivots(path_pivots+"/part-r-00000", path_pivots_previous, nb_node, conf)?1:0;
+	    	return comparePivots(path_pivots+"/part-r-00000", path_pivots_previous+"/part-r-00000", nb_node, conf)?1:0;
 	    }
 	    else{
 		    System.out.println("CA MARCHE PAS. :(");
 		    // compare pivots with previous pivots : 0 = differents. 1 = same.
-			return comparePivots(path_pivots+"/part-r-00000", path_pivots_previous, nb_node, conf)?1:0;
+			return comparePivots(path_pivots+"/part-r-00000", path_pivots_previous+"/part-r-00000", nb_node, conf)?1:0;
 		}
 	}
 }

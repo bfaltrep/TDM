@@ -11,13 +11,17 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.*;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -26,13 +30,44 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Progressable;
 import org.apache.hadoop.util.Tool;
-import org.apache.log4j.Logger;
 
 public class CopyOfKmeans1D extends Configured implements Tool {
-	 private static final Logger LOG = Logger.getLogger(CopyOfKmeans1D.class); //TMP
 
 	/* MapReduce Part */
-	
+
+	private static int getClosest(Double pt, Set<Double> pivots){
+		Iterator<Double> it = pivots.iterator();
+		Double tmp = it.next();
+		int closest = 0;
+		double dist = Math.abs(pt-tmp);
+		int i = 0;
+		while(it.hasNext()){
+			tmp = it.next();
+			if(dist > Math.abs(pt-tmp)){
+				closest = i;
+				dist = Math.abs(pt-tmp);
+			}
+			i++;
+		}
+		return closest;
+	}
+
+		private static Set<Double> readCachedFile(URI path_str, int asked){
+			Set<Double> pivots = new HashSet<Double>();
+		    try {
+		    	BufferedReader br = new BufferedReader( new FileReader(new File (path_str.getPath()).getName()));
+				String pattern;
+			    while ((pattern = br.readLine()) != null) {
+			       pivots.add(Double.parseDouble(pattern.split(",")[asked]));
+				}
+			    br.close();
+			} catch (EOFException exc) {}
+		    catch(Exception exc){
+		    	exc.printStackTrace();
+		    }
+		    return pivots;
+		}
+	 
 	// ----- MAPPER
 	
 	/*
@@ -44,47 +79,36 @@ public class CopyOfKmeans1D extends Configured implements Tool {
 		private Set<Double> _pivots;
 		private int _asked;
 		
-		//recupération des données du fichier de cache (pivots) => un set de double
-		private void readCachedFile(URI path_str){
-			
-		    _pivots = new HashSet<Double>();
-		    try {
-				BufferedReader br = new BufferedReader( new FileReader(new File(path_str.getPath()).getName()));
-				String pattern;
-			    while ((pattern = br.readLine()) != null) {
-			      _pivots.add(Double.parseDouble(pattern.split(",")[_asked]));
-			    }
-
-			    br.close();
-			} catch (EOFException exc) {}
-		    catch(Exception exc){
-		    	exc.printStackTrace();
-		    }
-		}
 		
 		protected void setup(Context context){
 			try {
 				_asked = context.getConfiguration().getInt("asked",-1);
-
 				URI[] files = context.getCacheFiles();
-				readCachedFile(files[0]);
+				_pivots = readCachedFile(files[0], _asked);
 			} catch (IOException e) {e.printStackTrace();}		
 		}
 		
 		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-			LOG.info("LOG DANS LE MAPPER");
-
+			
+			 String[] val = value.toString().split(",");
+			  context.getConfiguration().get("asked");
+			  
+			  if(!val[_asked].matches("") && !val[_asked].matches("Population")){
+				  int closest = getClosest(Double.parseDouble(val[_asked]), _pivots);
+				  List<String> tmp = new Vector<String>(); tmp.add(value.toString());
+				  context.write(new LongWritable(closest),new Text(value.toString()));
+			  }
+/*
 			String[] val = value.toString().split(",");
 			context.getConfiguration().get("asked");
 
 			
 			if(val[_asked].matches("Population")){
 				StringBuffer tmp = new StringBuffer();
-				tmp.append("TEST1");
 				for(Double d : _pivots)
 					tmp.append(d.toString()+"\n");
 				context.write(new LongWritable(1),new Text(tmp.toString()));
-			}
+			}*/
 		}
 	}
 
@@ -93,15 +117,14 @@ public class CopyOfKmeans1D extends Configured implements Tool {
 	/*
 	 * pour chaque clef (pivot), faire une moyenne totale puis chercher la ville la plus proche. écrit pour chaque ville <null,ville+","+newpivot>
 	*/
-	public static class ReducerKMeans extends Reducer<LongWritable,Text,Text,Text> {
+	public static class ReducerKMeans extends Reducer<LongWritable,Text,NullWritable,Text> {
 	
 	    public void reduce(LongWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 	    	StringBuffer tmp = new StringBuffer();
-	    	tmp.append("TEST2");
 	    	for(Text v : values)
 	    		tmp.append(v.toString()+"\n");
 	    	
-			context.write(new Text("1"),new Text(tmp.toString()));
+			context.write(NullWritable.get(),new Text(tmp.toString()));
 	    }
 	  }
 	
@@ -171,7 +194,7 @@ public class CopyOfKmeans1D extends Configured implements Tool {
 	    job.setOutputFormatClass(TextOutputFormat.class);
 	    job.setMapperClass(MapperKMeans.class);
 	    job.setReducerClass(ReducerKMeans.class);
-	    job.setOutputKeyClass(Text.class);
+	    job.setOutputKeyClass(NullWritable.class);
 	    job.setOutputValueClass(Text.class);
 	    
 		job.setMapOutputKeyClass(LongWritable.class);
