@@ -34,6 +34,8 @@ import org.apache.hadoop.util.Progressable;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
+import Main.TP9;
+
 /* http://blog.data-miners.com/2008_02_01_archive.html */
 
 public class Kmeans extends Configured implements Tool {

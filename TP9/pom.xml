@@ -25,7 +25,7 @@
   			<configuration>
   				<archive>
   					<manifest>
-  						<mainClass>TP9</mainClass>
+  						<mainClass>Main.TP9</mainClass>
   					</manifest>
   				</archive>
   			</configuration>

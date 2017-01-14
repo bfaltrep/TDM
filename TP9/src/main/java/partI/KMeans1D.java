@@ -1,3 +1,4 @@
+package partI;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,7 +23,8 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Job;
@@ -35,9 +37,9 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Progressable;
 import org.apache.hadoop.util.Tool;
 
-public class Kmeans1D extends Configured implements Tool {
-	
+import Main.TP9;
 
+public class KMeans1D extends Configured implements Tool {
 	public static class AverageWritable implements Writable{
 		private Double _sum;
 		private long _size;
@@ -86,36 +88,32 @@ public class Kmeans1D extends Configured implements Tool {
 	
 	/* Utils */
 
-	private static int getClosest(Double pt, Set<Double> pivots){
+	private static double getClosestValue(Double pt, Set<Double> pivots){
 		Iterator<Double> it = pivots.iterator();
 		Double tmp = it.next();
-		int closest = 0;
 		double dist = Math.abs(pt-tmp);
-		int i = 0;
+		double pivot = tmp;
 		while(it.hasNext()){
 			tmp = it.next();
-			if(dist > Math.abs(pt-tmp)){
-				closest = i;
+			if(Math.abs(pt-tmp) < dist){
 				dist = Math.abs(pt-tmp);
+				pivot = tmp;
 			}
-			i++;
 		}
-		return closest;
+		return pivot;
 	}
 		
-	private static Set<Double> readCachedFile(URI path_str, int asked){
+	private static Set<Double> readCachedFile(URI path_str){
 		Set<Double> pivots = new HashSet<Double>();
 	    try {
 	    	BufferedReader br = new BufferedReader( new FileReader(new File (path_str.getPath()).getName()));
 			String pattern;
 		    while ((pattern = br.readLine()) != null) {
-		       pivots.add(Double.parseDouble(pattern.split(",")[asked]));
+		       pivots.add(Double.parseDouble(pattern));
 			}
 		    br.close();
-		} catch (EOFException exc) {}
-	    catch(Exception exc){
-	    	exc.printStackTrace();
-	    }
+		}	catch (EOFException exc) {}
+	    	catch(Exception exc){exc.printStackTrace();}
 	    return pivots;
 	}
 	
@@ -128,7 +126,7 @@ public class Kmeans1D extends Configured implements Tool {
 	 * map : pour chaque ligne, cherche le pivot le plus proche et écrit <pivot,ville>
 	 * clean up : 
 	*/
-	public static class MapperKMeans extends Mapper<Object, Text, LongWritable, AverageWritable>{
+	public static class MapperKMeans extends Mapper<Object, Text, DoubleWritable, AverageWritable>{
 		private Set<Double> _pivots;
 		private int _asked;
 		
@@ -136,24 +134,27 @@ public class Kmeans1D extends Configured implements Tool {
 			try {
 				_asked = context.getConfiguration().getInt("asked",-1);
 				URI[] files = context.getCacheFiles();
-				_pivots = readCachedFile(files[0], _asked);
-				List<String> tmp = new Vector<String>();
-				tmp.add("test");
-				context.write(new LongWritable(_pivots.size()), new AverageWritable(0.0,0,tmp));
-			} catch (IOException e) {e.printStackTrace();
-			} catch (InterruptedException e) { e.printStackTrace();}		
+				_pivots = readCachedFile(files[0]);
+			}	catch (IOException e) {e.printStackTrace();}		
 		}
 		
 		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			
 			  String[] val = value.toString().split(",");
 			  context.getConfiguration().get("asked");
+			  try{
+				  // si la ville est valide => si la colonne demandée a du contenu
+				  if(!val[_asked].matches("")){
+					  double closest = getClosestValue(Double.parseDouble(val[_asked]), _pivots); //lève une exception pour la première ligne ce qui ne permet pas de finir le traitement. Ligne écartée.
+					  
+					  List<String> tmp = new Vector<String>(); tmp.add(value.toString());
+					  
+					  context.write(new DoubleWritable(closest),new AverageWritable(Double.parseDouble(val[_asked]),1,tmp));
+				  }
 			  
-			  if(!val[_asked].matches("") && !val[_asked].matches("Population")){
-				  //int closest = getClosest(Double.parseDouble(val[_asked]), _pivots);
-				  List<String> tmp = new Vector<String>(); tmp.add(value.toString());
-				 // context.write(new LongWritable(closest),new AverageWritable(Double.parseDouble(val[_asked]),1,tmp));
-				  context.write(new LongWritable(1),new AverageWritable(Double.parseDouble(val[_asked]),1,tmp));
+			  }catch(Exception e)
+			  {
+				 e.printStackTrace();
 			  }
 		}
 	}
@@ -163,19 +164,19 @@ public class Kmeans1D extends Configured implements Tool {
 	/*
 	 * pour chaque clef, cherche la nouvelle ville la plus "centrale" localement. écrit <pivot, <moyenne locale, liste villes>>
 	*/
-	public static class CombinerKMeans extends Reducer<LongWritable,AverageWritable,LongWritable,AverageWritable> {
-		private int _asked;
-				
-		public void reduce(LongWritable key, Iterable<AverageWritable> values, Context context) throws IOException, InterruptedException {
-			//reduit ouesh
+	public static class CombinerKMeans extends Reducer<DoubleWritable,AverageWritable,DoubleWritable,AverageWritable> {
+
+		public void reduce(DoubleWritable key, Iterable<AverageWritable> values, Context context) throws IOException, InterruptedException {
+			//réduit ouesh
+
 			long size = 0;
 			double sum = 0;
 			List<String> cities = new Vector<String>();
 			
-			for(AverageWritable citie : values){
-				sum += Double.parseDouble(citie.getCityLine().get(0).toString().split(",")[_asked]);
-				size++;
-				cities.add(citie.getCityLine().get(0).toString());
+			for(AverageWritable city : values){
+				sum += city.getSum();
+				size += 1;
+				cities.add(city.getCityLine().get(city.getCityLine().size()-1).toString());
 			}
 			context.write(key,new AverageWritable(sum, size, cities));
 		}
@@ -186,39 +187,34 @@ public class Kmeans1D extends Configured implements Tool {
 	/*
 	 * pour chaque clef (pivot), faire une moyenne totale puis chercher la ville la plus proche. écrit pour chaque ville <null,ville+","+newpivot>
 	*/
-	public static class ReducerKMeans extends Reducer<LongWritable,AverageWritable,Text,Text> {
-		private int _asked;
-		private long _iteration;
-		
+	public static class ReducerKMeans extends Reducer<DoubleWritable,AverageWritable,NullWritable,Text> {
+		private int _asked;		
 		
 		protected void setup(Context context){
 			_asked = context.getConfiguration().getInt("asked",-1);	
-			_iteration = context.getConfiguration().getInt("nbIteration",-1);	
 		}
 	
-	    public void reduce(LongWritable key, Iterable<AverageWritable> values, Context context) throws IOException, InterruptedException {
+	    public void reduce(DoubleWritable key, Iterable<AverageWritable> values, Context context) throws IOException, InterruptedException {
 	    	
 	    	double average = 0;
 	    	long size = 0;
-	    	long pivot;
+	    	double pivot;
 	    	Set<Double> cities = new HashSet<Double>();
 	    	
 			for(AverageWritable p : values){
 				size += p.getSize();
 				average += p.getSum();
 				
+				//chaque combiner a réunit les valeurs des villes traitées pour cette clé dans une liste.
 				List<String> citieslines = p.getCityLine();
-				for (int i = 0; i < citieslines.size(); i++) {
-					cities.add(Double.parseDouble(citieslines.get(i).split(",")[_asked]));
-				}
+				for(String s : citieslines)
+					cities.add(Double.parseDouble(s.split(",")[_asked]));
 			}
 
+			//créer le nouveau pivot de l'ensemble en cherchant la ville la plus proche du pivot "mathematique"/moyen.
 			average/=size;
-			
-			pivot = getClosest(average, cities);
-			
-			context.write(new Text(String.valueOf(_iteration)),new Text(String.valueOf(pivot)));
-	    	//context.write(new LongWritable(_iteration),new LongWritable(pivot));
+			pivot = getClosestValue(average, cities);
+			context.write(NullWritable.get(),new Text(String.valueOf(pivot)));
 	    }
 	  }
 	
@@ -254,7 +250,7 @@ public class Kmeans1D extends Configured implements Tool {
 				String val = br.readLine();
 				String[] tmp = val.split(",");
 				if(!tmp[asked].matches("")){
-					bw.write(val+"\n");
+					bw.write(tmp[asked]+"\n");
 					i++;
 				}
 			}
@@ -300,11 +296,10 @@ public class Kmeans1D extends Configured implements Tool {
 	    }catch (Exception e){e.printStackTrace();}
 		return res;
 	}
-	
-	 
+		 	
 	//args : inputfile  output(unused here)  nb_node  column_asked  nb_iteration path_pivots  path_pivots_previous
 	public int run(String[] args) throws Exception {
-		System.out.println(" pivot "+args[5]+" // previous pivot "+args[6]); //TMP
+		System.out.println("\033[0;34m iteration "+args[args.length-3]+"\033[0m");
 		Configuration conf = new Configuration();
 		
 		//recup args.
@@ -324,9 +319,9 @@ public class Kmeans1D extends Configured implements Tool {
 		
 		Job job = Job.getInstance(conf, "Projet-kmeans-1D");
 		
-		job.addCacheFile(new Path(path_pivots_previous).toUri());
+		job.addCacheFile(new Path(path_pivots_previous+"/part-r-00000").toUri());
 		
-		job.setNumReduceTasks(1);
+		//job.setNumReduceTasks(1);
 	    job.setJarByClass(TP9.class);
 		
 	    job.setInputFormatClass(TextInputFormat.class);
@@ -336,23 +331,18 @@ public class Kmeans1D extends Configured implements Tool {
 	    job.setReducerClass(ReducerKMeans.class);
 		job.setCombinerClass(CombinerKMeans.class);
 	    
-		job.setMapOutputKeyClass(LongWritable.class);
+		job.setMapOutputKeyClass(DoubleWritable.class);
 		job.setMapOutputValueClass(AverageWritable.class);
 		
-	    job.setOutputKeyClass(Text.class);
+	    job.setOutputKeyClass(NullWritable.class);
 	    job.setOutputValueClass(Text.class);
 	    
 	    FileInputFormat.addInputPath(job, new Path(input_file));
 	    FileOutputFormat.setOutputPath(job, new Path(path_pivots)); 
-	   
-	    if (job.waitForCompletion(true)){
-	    	System.out.println("CA MARCHE. :)");
-	    	return comparePivots(path_pivots+"/part-r-00000", path_pivots_previous+"/part-r-00000", nb_node, conf)?1:0;
-	    }
-	    else{
-		    System.out.println("CA MARCHE PAS. :(");
-		    // compare pivots with previous pivots : 0 = differents. 1 = same.
-			return comparePivots(path_pivots+"/part-r-00000", path_pivots_previous+"/part-r-00000", nb_node, conf)?1:0;
-		}
+	    
+	    job.waitForCompletion(true);
+	    
+	    // compare pivots with previous pivots : 0 = differents. 1 = same.
+	    return comparePivots(path_pivots+"/part-r-00000", path_pivots_previous+"/part-r-00000", nb_node, conf)?1:0;
 	}
 }

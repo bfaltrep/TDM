@@ -31,6 +31,8 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Progressable;
 import org.apache.hadoop.util.Tool;
 
+import Main.TP9;
+
 public class CopyOfKmeans1D extends Configured implements Tool {
 
 	/* MapReduce Part */
