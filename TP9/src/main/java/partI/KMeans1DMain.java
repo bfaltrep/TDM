@@ -16,6 +16,7 @@ public class KMeans1DMain {
 			FileSystem fs = FileSystem.get(new URI(d1).normalize(), new Configuration(), "bfaltrep");
 			fs.delete(new Path((new URI(d1)).getPath()), true);
 
+			fs.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -34,6 +35,7 @@ public class KMeans1DMain {
 				fs.delete(new Path((new URI(path_dst)).getPath()),true);
 			fs.rename(new Path(path_src), new Path(path_dst));
 			fs.delete(new Path((new URI(to_delete)).getPath()),true);
+			fs.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {

@@ -10,7 +10,9 @@ import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -24,7 +26,7 @@ public class KMeansNDMain {
 		try {
 			FileSystem fs = FileSystem.get(new URI(d1).normalize(), new Configuration(), "bfaltrep");
 			fs.delete(new Path((new URI(d1)).getPath()), true);
-
+			fs.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -42,6 +44,8 @@ public class KMeansNDMain {
 				fs.delete(new Path((new URI(path_dst)).getPath()),true);
 			fs.rename(new Path(path_src), new Path(path_dst));
 			fs.delete(new Path((new URI(to_delete)).getPath()),true);
+			
+			fs.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -78,11 +82,11 @@ public class KMeansNDMain {
 			BufferedReader br = new BufferedReader( new InputStreamReader( is, "UTF-8"));
 			br.readLine(); //retire la première ligne qui contient les intitulés de colonnes.
 
-			int current_node = 0;
 			double value = 0;
 			boolean control=true;
+			Set<Double> set = new HashSet<Double>();
 
-			while (current_node < nb_node) {
+			while (set.size() < nb_node) {
 				String[] blocs = br.readLine().split(",");
 				try{
 					for(Integer ask : asked){
@@ -95,15 +99,17 @@ public class KMeansNDMain {
 						}
 					}
 					if(control){
-						bw.write(value+"\n");
-						current_node++;
+						set.add(value);
 					}
 				}catch(Exception e){ e.printStackTrace();}
 
 				control = true;
 				value = 0;
 			}
-
+			//nécessaire pour ne pas établir des pivots doublons
+			for(Double d : set)
+				bw.write(d+"\n");
+			
 			br.close();
 			bw.close();
 			input_fs.close();

@@ -308,7 +308,7 @@ public class KMeansND extends Configured implements Tool {
 		FileInputFormat.addInputPath(job, new Path(input_file));
 		FileOutputFormat.setOutputPath(job, new Path(path_pivots)); 
 
-		System.out.println("\033[0;34m MapReduce : \033[0m "+job.waitForCompletion(true));
+		System.out.println("\033[0;34m MapReduce : \033[0m "+job.waitForCompletion(false));
 
 		// compare pivots with previous pivots : 0 = differents. 1 = same.
 		return comparePivots(path_pivots+"/part-r-00000", path_pivots_previous+"/part-r-00000", nb_node, conf)?1:0;

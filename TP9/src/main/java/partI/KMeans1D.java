@@ -245,15 +245,21 @@ public class KMeans1D extends Configured implements Tool {
 			BufferedWriter bw = new BufferedWriter( new OutputStreamWriter( os, "UTF-8" ));
 			BufferedReader br = new BufferedReader( new InputStreamReader( is, "UTF-8"));
 			br.readLine(); //retire la première ligne qui contient les intitulés de colonnes.
-			int i = 0;
-			while (i < nb_node) {
+			
+			Set<Double> set = new HashSet<Double>();
+			
+			while (set.size() < nb_node) {
 				String val = br.readLine();
 				String[] tmp = val.split(",");
 				if(!tmp[asked].matches("")){
-					bw.write(tmp[asked]+"\n");
-					i++;
+					set.add(Double.parseDouble(tmp[asked]));
 				}
 			}
+			
+			//nécessaire pour ne pas établir des pivots doublons
+			for(Double d : set)
+				bw.write(d+"\n");
+			
 			br.close();
 			bw.close();
 			input_fs.close();
@@ -340,7 +346,7 @@ public class KMeans1D extends Configured implements Tool {
 		FileInputFormat.addInputPath(job, new Path(input_file));
 		FileOutputFormat.setOutputPath(job, new Path(path_pivots)); 
 
-		job.waitForCompletion(true);
+		job.waitForCompletion(false);
 
 		// compare pivots with previous pivots : 0 = differents. 1 = same.
 		return comparePivots(path_pivots+"/part-r-00000", path_pivots_previous+"/part-r-00000", nb_node, conf)?1:0;
