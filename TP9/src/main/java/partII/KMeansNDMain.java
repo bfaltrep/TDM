@@ -18,8 +18,6 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Progressable;
 import org.apache.hadoop.util.ToolRunner;
 
-import partI.KMeans1DFinal;
-
 public class KMeansNDMain {
 
 	private static void removeFromPath(String d1){
@@ -170,7 +168,6 @@ public class KMeansNDMain {
 		System.out.println("\033[0;34m iteration "+nb_iteration+"\033[0m"); //TMP
 		while(ToolRunner.run(new KMeansND(), args_treatment) == 0){
 			++nb_iteration;
-			args_treatment[length] = String.valueOf(nb_iteration);
 
 			//On intervertit les fichiers temporaires de calcul des pivots.
 			String tmp = args_treatment[pivot_1];
@@ -189,9 +186,9 @@ public class KMeansNDMain {
 		args_final[args_final.length-2] =  output_directory+"tmpND/kmeans-p0";
 		args_final[args_final.length-1] =  output_directory+"tmpresND";
 
-		// assure que le répertoire de sortie n'existe pas déjà. On utilise le KMeans1DFinal car le traitement est exactement le même ici.
+		// assure que le répertoire de sortie n'existe pas déjà.
 		removeFromPath(args_final[args_final.length-1]); 
-		ToolRunner.run(new KMeans1DFinal(), args_final);
+		ToolRunner.run(new KMeansNDFinal(), args_final);
 
 
 		//Renommage et Suppression des fichiers de sortie de MapRaduce :

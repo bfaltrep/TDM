@@ -57,7 +57,7 @@ public class KMeans1DMain {
 	public static void main(String[] args) throws Exception {
 
 		if(args.length != 4){
-			System.out.println("arguments expected : inputPath outputPath nbNodes columns_asked...");
+			System.out.println("arguments expected : inputPath outputPath nbNodes columns_asked");
 			System.exit(0);
 		}
 

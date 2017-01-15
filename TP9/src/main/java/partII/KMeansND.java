@@ -77,7 +77,7 @@ public class KMeansND extends Configured implements Tool {
 			return _size;
 		}
 
-		public List<Double> getCityValue(){
+		public List<Double> getValues(){
 			return _cities;
 		}
 	}
@@ -160,10 +160,10 @@ public class KMeansND extends Configured implements Tool {
 				if(control){
 					double closest = getClosestValue(val, _pivots);
 
-					List<Double> tmp = new Vector<Double>(); 
-					tmp.add(val);
+					List<Double> list = new Vector<Double>(); 
+					list.add(val);
 
-					context.write(new DoubleWritable(closest),new AverageWritable(val,1,tmp));
+					context.write(new DoubleWritable(closest),new AverageWritable(val,1,list));
 				}
 
 			}catch(Exception e)
@@ -190,7 +190,7 @@ public class KMeansND extends Configured implements Tool {
 			for(AverageWritable city : values){
 				sum += city.getSum();
 				size += 1;
-				cities.add(city.getCityValue().get(0));
+				cities.add(city.getValues().get(city.getValues().size()-1));
 			}
 			context.write(key,new AverageWritable(sum, size, cities));
 		}
@@ -215,7 +215,7 @@ public class KMeansND extends Configured implements Tool {
 				average += p.getSum();
 
 				//chaque combiner a réunit les valeurs des villes traitées pour cette clé dans une liste.
-				cities.addAll(p.getCityValue());
+				cities.addAll(p.getValues());
 
 			}
 
