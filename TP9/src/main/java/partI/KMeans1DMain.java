@@ -15,7 +15,7 @@ public class KMeans1DMain {
 		try {
 			FileSystem fs = FileSystem.get(new URI(d1).normalize(), new Configuration(), "bfaltrep");
 			fs.delete(new Path((new URI(d1)).getPath()), true);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -25,7 +25,7 @@ public class KMeans1DMain {
 		}
 	}
 
-	 
+
 	private static void renameAndClean(String path_src, String path_dst, String to_delete){
 		try {
 			URI uri = new URI(path_src).normalize();
@@ -41,21 +41,21 @@ public class KMeans1DMain {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	private static String getPath(String s){
 		String[] blocs = s.split("/");
 		//récupération du chemin menant au répertoire contenant ce fichier.
 		String res = s.substring(0, (s.length()-(blocs[blocs.length-1].length())));
 		return res;	
 	}
-		
+
 	/* /cities.txt /res.txt 5 4 */
-	
+
 	//args : inputfile outputdirectory nb_node column_asked1 column_asked2 etc...
 	public static void main(String[] args) throws Exception {
-		
+
 		if(args.length != 4){
 			System.out.println("arguments expected : inputPath outputPath nbNodes columns_asked...");
 			System.exit(0);
@@ -65,11 +65,11 @@ public class KMeans1DMain {
 		int length = args.length;
 		int pivot_1 = length+1;
 		int pivot_0 = length+2;
-		
+
 		String output_path = args[1];
 		String output_directory =  getPath(output_path);
 		String args_treatment[] = new String[length+3];
-		
+
 		//supprime le dossier de sortie, s'il existe.
 		removeFromPath(args[1]);
 
@@ -77,7 +77,7 @@ public class KMeans1DMain {
 		for (int i = 0; i < args.length; i++) {
 			args_treatment[i] = args[i];
 		}
-				
+
 		//on ajoute de nouveaux arguments après la liste transmise
 		args_treatment[length] = String.valueOf(nb_iteration); 
 
@@ -96,7 +96,7 @@ public class KMeans1DMain {
 			String tmp = args_treatment[pivot_1];
 			args_treatment[pivot_1] = args_treatment[pivot_0];
 			args_treatment[pivot_0] = tmp;
-			
+
 			removeFromPath(args_treatment[pivot_1]);
 		}
 
@@ -111,17 +111,17 @@ public class KMeans1DMain {
 		// assure que le répertoire de sortie n'existe pas déjà.
 		removeFromPath(args_final[args_final.length-1]); // assure que le répertoire de sortie n'existe pas déjà.
 		ToolRunner.run(new KMeans1DFinal(), args_final);
-		
-		
+
+
 		//Renommage et Suppression des fichiers de sortie de MapRaduce :
 		// $(output_directory)/tmpres1D/part-r-00000 -> $(output_path)
 		// suppression $(output_directory)/tmpres1D/_SUCCESS
-	    renameAndClean(output_directory+"tmpres1D/part-r-00000",args[1],output_directory+"tmpres1D/_SUCCESS");
-	    
-	    
-	    removeFromPath(output_directory+"tmpres1D");
-	    // removeFromPath(output_directory+"tmp");
+		renameAndClean(output_directory+"tmpres1D/part-r-00000",args[1],output_directory+"tmpres1D/_SUCCESS");
+
+
+		removeFromPath(output_directory+"tmpres1D");
+		// removeFromPath(output_directory+"tmp");
 		System.exit(0); 
-		
+
 	}
 }
